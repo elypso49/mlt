@@ -1,4 +1,4 @@
-name: Build and Push Docker Image for Feature Branches
+name: Build and Push Mlt.Api Docker Image for Feature Branches
 
 on:
   push:
@@ -26,5 +26,6 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
+        file: mlt.api.Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/mlt.api:feature
