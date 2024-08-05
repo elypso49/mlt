@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using mlt.common.services;
+using mlt.services.RssFeed;
 
 namespace mlt.services;
 

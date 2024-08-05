@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using mlt.dal.repositories;
+using mlt.dal.repositories.RssFeed;
 
 namespace mlt.dal;
 

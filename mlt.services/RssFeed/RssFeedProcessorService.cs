@@ -1,7 +1,6 @@
-﻿using mlt.common.services;
-using mlt.dal.repositories;
+﻿using mlt.dal.repositories.RssFeed;
 
-namespace mlt.services;
+namespace mlt.services.RssFeed;
 
 public class RssFeedProcessorService(IRssFeedProcessorRepository rssFeedProcessorRepository) : IRssFeedProcessorService
 {

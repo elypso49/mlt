@@ -1,4 +1,4 @@
-﻿namespace mlt.dal.repositories;
+﻿namespace mlt.dal.resultDtos;
 
 public abstract class Acknowledgable<T> where T:class
 {

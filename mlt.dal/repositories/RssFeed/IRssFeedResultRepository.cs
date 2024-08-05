@@ -1,6 +1,6 @@
-﻿using mlt.common.domainEntities;
+﻿using mlt.common.domainEntities.RssFeed;
 
-namespace mlt.dal.repositories;
+namespace mlt.dal.repositories.RssFeed;
 
 public interface IRssFeedResultRepository
 {

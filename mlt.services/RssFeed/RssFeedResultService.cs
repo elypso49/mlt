@@ -1,8 +1,7 @@
-﻿using mlt.common.domainEntities;
-using mlt.common.services;
-using mlt.dal.repositories;
+﻿using mlt.common.domainEntities.RssFeed;
+using mlt.dal.repositories.RssFeed;
 
-namespace mlt.services;
+namespace mlt.services.RssFeed;
 
 public class RssFeedResultService(IRssFeedResultRepository rssFeedResultRepository) : IRssFeedResultService
 {

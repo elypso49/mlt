@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Options;
-using mlt.common.domainEntities;
-using mlt.dal.dbSettings;
-using mlt.dal.models;
+using mlt.common.domainEntities.RssFeed;
+using mlt.dal.models.RssFeed;
+using mlt.dal.Options;
 using MongoDB.Driver;
 
-namespace mlt.dal.repositories;
+namespace mlt.dal.repositories.RssFeed;
 
 internal class RssFeedResultRepository : IRssFeedResultRepository
 {
@@ -16,7 +16,7 @@ internal class RssFeedResultRepository : IRssFeedResultRepository
     {
         _mapper = mapper;
         var client = new MongoClient(settings.Value.ConnectionString);
-        _rssFeedResults = client.GetDatabase(settings.Value.DatabaseName).GetCollection<RssFeedResultModel>("RssFeedResults");
+        _rssFeedResults = client.GetDatabase(settings.Value.RssLibraryDatabaseName).GetCollection<RssFeedResultModel>("RssFeedResults");
     }
 
     public async Task<IEnumerable<RssFeedResult>> GetAll()

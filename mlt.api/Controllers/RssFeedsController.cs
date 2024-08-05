@@ -1,19 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using mlt.common.domainEntities;
-using mlt.common.services;
+using mlt.common.domainEntities.RssFeed;
+using mlt.services.RssFeed;
 
 namespace mlt.api.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
-public class RssFeedsController(IRssFeedService service) : ControllerBase
+public class RssFeedsController(IRssFeedService service) : BaseController
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<RssFeed>>> GetRssFeeds()
+    [ProducesResponseType(typeof(IEnumerable<RssFeed>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetRssFeeds()
         => Ok(await service.GetAll());
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<RssFeed>> GetRssFeed(string id)
+    [ProducesResponseType(typeof(RssFeed), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetRssFeed(string id)
     {
         var feed = await service.GetById(id);
 
@@ -24,7 +28,9 @@ public class RssFeedsController(IRssFeedService service) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<RssFeed>> PostRssFeed(RssFeed feed)
+    [ProducesResponseType(typeof(IEnumerable<RssFeed>), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> PostRssFeed(RssFeed feed)
     {
         await service.Add(feed);
 
@@ -32,7 +38,7 @@ public class RssFeedsController(IRssFeedService service) : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutRssFeed(string id, RssFeed feed)
+    public async Task<ActionResult> PutRssFeed(string id, RssFeed feed)
     {
         var existingFeed = await service.GetById(id);
 

@@ -2,12 +2,12 @@
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Extensions.Options;
-using mlt.common.domainEntities;
-using mlt.dal.dbSettings;
-using mlt.dal.models;
+using mlt.common.domainEntities.RssFeed;
+using mlt.dal.models.RssFeed;
+using mlt.dal.Options;
 using MongoDB.Driver;
 
-namespace mlt.dal.repositories;
+namespace mlt.dal.repositories.RssFeed;
 
 internal class RssFeedProcessorRepository : IRssFeedProcessorRepository
 {
@@ -18,7 +18,7 @@ internal class RssFeedProcessorRepository : IRssFeedProcessorRepository
     {
         _rssFeedResultRepository = rssFeedResultRepository;
         var client = new MongoClient(settings.Value.ConnectionString);
-        _rssFeeds = client.GetDatabase(settings.Value.DatabaseName).GetCollection<RssFeedModel>("RssFeeds");
+        _rssFeeds = client.GetDatabase(settings.Value.RssLibraryDatabaseName).GetCollection<RssFeedModel>("RssFeeds");
     }
 
     public async Task ProcessFeed(string rssFeedId)

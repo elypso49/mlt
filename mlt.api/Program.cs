@@ -1,5 +1,5 @@
 using mlt.dal;
-using mlt.dal.dbSettings;
+using mlt.dal.Options;
 using ServiceInjection = mlt.services.ServiceInjection;
 
 var builder = WebApplication.CreateBuilder(args);

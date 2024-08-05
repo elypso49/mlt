@@ -1,6 +1,6 @@
-﻿using mlt.common.enums;
+﻿using mlt.common.domainEntities.RssFeed.enums;
 
-namespace mlt.common.domainEntities;
+namespace mlt.common.domainEntities.RssFeed;
 
 public class RssFeedResult
 {

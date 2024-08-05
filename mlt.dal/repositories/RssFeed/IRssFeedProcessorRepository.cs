@@ -1,4 +1,4 @@
-﻿namespace mlt.dal.repositories;
+﻿namespace mlt.dal.repositories.RssFeed;
 
 public interface IRssFeedProcessorRepository
 {

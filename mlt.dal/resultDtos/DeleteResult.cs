@@ -1,4 +1,4 @@
-﻿namespace mlt.dal.repositories;
+﻿namespace mlt.dal.resultDtos;
 
 public class DeleteResult : Acknowledgable<DeleteResult>
 {

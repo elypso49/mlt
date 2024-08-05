@@ -1,4 +1,4 @@
-namespace mlt.common.enums;
+namespace mlt.common.domainEntities.RssFeed.enums;
 
 public enum StateValue
 {

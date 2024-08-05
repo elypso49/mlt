@@ -1,4 +1,4 @@
-﻿namespace mlt.common.services;
+﻿namespace mlt.services.RssFeed;
 
 public interface IRssFeedProcessorService
 {

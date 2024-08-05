@@ -1,8 +1,8 @@
-﻿using mlt.common.enums;
+﻿using mlt.common.domainEntities.RssFeed.enums;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace mlt.dal.models;
+namespace mlt.dal.models.RssFeed;
 
 public class RssFeedResultModel
 {
