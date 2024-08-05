@@ -1,9 +1,30 @@
+using mlt.dal;
+using mlt.dal.dbSettings;
+using ServiceInjection = mlt.services.ServiceInjection;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
+                                       {
+                                           var env = hostingContext.HostingEnvironment;
+
+                                           config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                                                 .AddJsonFile($"appsettings.Development.json", optional: true, reloadOnChange: true);
+
+                                           config.AddEnvironmentVariables();
+                                       });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+ServiceInjection.GetDependencyInjection(builder.Services);
+mlt.dal.ServiceInjection.GetDependencyInjection(builder.Services);
+
+// builder.Services.Configure<MongoDbOptions>(options => builder.Configuration.GetSection(nameof(MongoDbOptions)).Bind(options));
+builder.Services.Configure<MongoDbOptions>(builder.Configuration.GetSection(nameof(MongoDbOptions)));
 
 var app = builder.Build();
 
@@ -14,6 +35,10 @@ app.UseSwaggerUI(options =>
                      options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                      options.RoutePrefix = string.Empty; // Serve Swagger UI at root path
                  });
+
+app.MapControllers();
+
+app.Run();
 
 // var summaries = new[]
 //                 {
@@ -33,10 +58,6 @@ app.UseSwaggerUI(options =>
 //            })
 //    .WithName("GetWeatherForecast")
 //    .WithOpenApi();
-
-app.MapControllers();
-
-app.Run();
 
 // record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 // {
