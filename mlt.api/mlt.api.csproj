@@ -12,10 +12,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="..\mlt.api.Dockerfile">
-      <Link>mlt.api.Dockerfile</Link>
-    </Content>
-  </ItemGroup>
-
 </Project>

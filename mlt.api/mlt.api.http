@@ -1,6 +1,0 @@
-#@mlt.api_HostAddress = http://localhost:8080
-#
-#GET {{mlt.api_HostAddress}}/weatherforecast/
-#Accept: application/json
-#
-####
