@@ -16,21 +16,7 @@ public class BaseController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Log the exception if needed
-            // _logger.LogError(ex, "An error occurred while processing the request.");
             return BadRequest(new { message = ex.Message });
         }
     }
-
-    // protected async Task<ActionResult> HandleRequest(Func<Task<ActionResult>> process)
-    // {
-    //     try
-    //     {
-    //         return await process();
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         return BadRequest(new { message = ex.Message });
-    //     }
-    // }
 }

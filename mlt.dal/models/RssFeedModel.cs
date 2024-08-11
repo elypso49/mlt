@@ -1,13 +1,9 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using mlt.common;
 
-namespace mlt.dal.models.RssFeed;
+namespace mlt.dal.models;
 
-public class RssFeedModel
+public class RssFeedModel : BsonIdentifiable
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
     public string Name { get; set; } = null!;
     public string Url { get; set; } = null!;
     public DateTime LastUpdate { get; set; }

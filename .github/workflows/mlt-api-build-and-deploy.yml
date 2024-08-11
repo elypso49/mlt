@@ -1,9 +1,15 @@
-name: Build and Push Mlt.Api Docker Image for Feature Branches
+name: Mlt.Api Build & Deploy
 
 on:
   push:
     branches:
       - 'feature/**'
+      - 'main'
+    paths:
+      - 'mlt.api/**'
+      - 'mlt.common/**'
+      - 'mlt.dal/**'
+      - 'mlt.services/**'     
 
 jobs:
   build:
@@ -22,10 +28,20 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
+    - name: Determine Docker tag
+      id: tag
+      run: echo "TAG=$(if [ '${{ github.ref }}' == 'refs/heads/main' ]; then echo 'latest'; else echo 'feature'; fi)" >> $GITHUB_ENV
+
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
       with:
         context: .
         file: mlt.api.Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/mlt.api:feature
+        tags: ${{ secrets.DOCKER_USERNAME }}/mlt.api:${{ env.TAG }}
+
+    - name: Trigger Stack Webhook
+      run: |
+        curl -X POST ${{ vars.MLT_API_WEBHOOK }} \
+        -H "Content-Type: application/json" \
+        -d '{"status": "success", "tag": "${{ env.TAG }}"}'

@@ -2,8 +2,8 @@
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Extensions.Options;
-using mlt.common.domainEntities.RssFeed;
-using mlt.dal.models.RssFeed;
+using mlt.common.domainEntities;
+using mlt.dal.models;
 using mlt.dal.Options;
 using MongoDB.Driver;
 

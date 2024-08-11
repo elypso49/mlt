@@ -1,16 +1,8 @@
-﻿using mlt.common.domainEntities.RssFeed;
+﻿using mlt.common.domainEntities;
 
 namespace mlt.services.RssFeed;
 
-public interface IRssFeedResultService
+public interface IRssFeedResultService : ICrudService<RssFeedResult>
 {
-    Task<IEnumerable<RssFeedResult>> GetAll();
-
-    Task<RssFeedResult> GetById(string id);
-
-    Task Add(RssFeedResult result);
-
-    Task Update(string id, RssFeedResult result);
-
-    Task Delete(string id);
+    Task<IEnumerable<RssFeedResult>> GetByRssFeedId(string rssFeedId);
 }
