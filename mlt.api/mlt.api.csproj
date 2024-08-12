@@ -14,8 +14,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\mlt.common\mlt.common.csproj" />
-    <ProjectReference Include="..\mlt.dal\mlt.dal.csproj" />
-    <ProjectReference Include="..\mlt.services\mlt.services.csproj" />
+    <ProjectReference Include="..\mlt.rss\mlt.rss.csproj" />
+    <ProjectReference Include="..\mlt.synology\mlt.synology.csproj" />
   </ItemGroup>
 
 </Project>

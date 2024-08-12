@@ -38,6 +38,7 @@ jobs:
         tags: ${{ secrets.DOCKER_USERNAME }}/mlt.web:${{ env.TAG }}
 
     - name: Trigger Stack Webhook
+      if: ${{ vars.MLT_WEB_WEBHOOK != '' }}
       run: |
         curl -X POST ${{ vars.MLT_WEB_WEBHOOK }} \
         -H "Content-Type: application/json" \

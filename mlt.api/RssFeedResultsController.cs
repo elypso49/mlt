@@ -1,0 +1,19 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using mlt.common.controllers;
+using mlt.rss.dtos;
+using mlt.rss.services;
+
+namespace mlt.api;
+
+[Route("[controller]")]
+[ApiController]
+public class RssFeedResultsController(IRssFeedResultService service, IRssFeedProcessorService rssFeedProcessorService) : CrudController<RssFeedResult>(service)
+{
+    [HttpPost("{rssFeedId}/fetch")]
+    public Task<ActionResult> ProcessFeed(string rssFeedId)
+        => HandleRequest(async () =>
+                         {
+                             await rssFeedProcessorService.ProcessFeed(rssFeedId);
+                             return (true, Ok());
+                         });
+}

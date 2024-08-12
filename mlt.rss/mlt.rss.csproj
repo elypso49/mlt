@@ -7,7 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="RssFeed\" />
+      <PackageReference Include="AutoMapper" Version="13.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\mlt.common\mlt.common.csproj" />
     </ItemGroup>
 
 </Project>
