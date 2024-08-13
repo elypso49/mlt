@@ -2,7 +2,7 @@
 using mlt.common.controllers;
 using mlt.synology.services;
 
-namespace mlt.api;
+namespace mlt.api.controllers;
 
 [Route("[controller]")]
 [ApiController]

@@ -5,7 +5,7 @@ using mlt.common.options;
 
 namespace mlt.synology.datas;
 
-public abstract class SynologyHttpClient(IOptions<SynologyOptions> options, JsonSerializerOptions jsonSerializerOptions) : HttpService(jsonSerializerOptions)
+public abstract class SynologyHttpClient(JsonSerializerOptions jsonSerializerOptions, IOptions<SynologyOptions> options) : HttpService(jsonSerializerOptions)
 {
     private SynologyOptions SynologyOptions => options.Value;
 

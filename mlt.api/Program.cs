@@ -1,5 +1,6 @@
 using System.Text.Json;
 using mlt.common.options;
+using mlt.realdebrid;
 using mlt.rss;
 using mlt.synology;
 
@@ -11,11 +12,14 @@ builder.Services.AddEndpointsApiExplorer()
        .AddSwaggerGen()
        .AddAutoMapper(typeof(MappingRssProfile))
        .AddAutoMapper(typeof(MappingSynoProfile))
+       .AddAutoMapper(typeof(MappingRdProfile))
        .AddCors(options => { options.AddPolicy("AllowAll", x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()); })
        .Configure<MongoDbOptions>(builder.Configuration.GetSection(nameof(MongoDbOptions)))
        .Configure<SynologyOptions>(builder.Configuration.GetSection(nameof(SynologyOptions)))
+       .Configure<RealDebridOptions>(builder.Configuration.GetSection(nameof(RealDebridOptions)))
        .GetRssDependencyInjection()
        .GetSynoDependencyInjection()
+       .GetRealDebdridDependencyInjection()
        .AddSingleton(new JsonSerializerOptions
                      {
                          PropertyNamingPolicy = JsonNamingPolicy.CamelCase,

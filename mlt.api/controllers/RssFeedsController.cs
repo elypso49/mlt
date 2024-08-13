@@ -3,7 +3,7 @@ using mlt.common.controllers;
 using mlt.rss.dtos;
 using mlt.rss.services;
 
-namespace mlt.api;
+namespace mlt.api.controllers;
 
 [Route("[controller]")]
 [ApiController]
