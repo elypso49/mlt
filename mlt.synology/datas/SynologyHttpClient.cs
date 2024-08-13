@@ -1,9 +1,4 @@
-﻿using System.Text.Json;
-using Microsoft.Extensions.Options;
-using mlt.common.datas;
-using mlt.common.options;
-
-namespace mlt.synology.datas;
+﻿namespace mlt.synology.datas;
 
 public abstract class SynologyHttpClient(JsonSerializerOptions jsonSerializerOptions, IOptions<SynologyOptions> options) : HttpService(jsonSerializerOptions)
 {

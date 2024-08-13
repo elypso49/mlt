@@ -2,6 +2,5 @@
 
 public class MappingRdProfile : Profile
 {
-    public MappingRdProfile()
-        => CreateMap<DownloadItem, RdFileInfo>();
+    public MappingRdProfile() => CreateMap<DownloadItem, RdFileInfo>();
 }

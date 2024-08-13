@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using mlt.common.services;
+﻿namespace mlt.common.controllers;
 
-namespace mlt.common.controllers;
-
-public abstract class CrudController<T>(ICrudService<T> service) : BaseController where T : Identifiable
+public abstract class CrudController<T>(ICrudService<T> service) : BaseController
+    where T : Identifiable
 {
     [HttpGet]
-    public Task<ActionResult> GetAll()
-        => HandleRequest(async () => (true, Ok(await service.GetAll())));
+    public Task<ActionResult> GetAll() => HandleRequest(async () => (true, Ok(await service.GetAll())));
 
     [HttpGet("{id}")]
     public Task<ActionResult> GetById(string id)
@@ -17,12 +14,12 @@ public abstract class CrudController<T>(ICrudService<T> service) : BaseControlle
 
                              return (result != null, Ok(result));
                          });
-    
+
     [HttpPost]
     public async Task<ActionResult> PostRssFeed(T feed)
     {
         var created = await service.Add(feed);
-    
+
         return CreatedAtAction(nameof(PostRssFeed), created);
     }
 
@@ -38,8 +35,7 @@ public abstract class CrudController<T>(ICrudService<T> service) : BaseControlle
                              return (true, NoContent());
                          });
 
-    private async Task<bool> CheckIfExists(string id)
-        => await service.GetById(id) != null;
+    private async Task<bool> CheckIfExists(string id) => await service.GetById(id) != null;
 
     [HttpDelete("{id}")]
     public Task<ActionResult> Delete(string id)

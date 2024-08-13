@@ -1,14 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.Options;
-using mlt.common.options;
-using MongoDB.Driver;
-using DeleteResult = mlt.common.datas.dtos.DeleteResult;
-using UpdateResult = mlt.common.datas.dtos.UpdateResult;
+﻿namespace mlt.common.datas;
 
-namespace mlt.common.datas;
-
-public abstract class CrudRepository<TEntity, TModel> : ICrudRepository<TEntity> where TEntity : class
-                                                                                   where TModel : BsonIdentifiable
+public abstract class CrudRepository<TEntity, TModel> : ICrudRepository<TEntity>
+    where TEntity : class
+    where TModel : BsonIdentifiable
 {
     protected readonly IMongoCollection<TModel> Collection;
     protected readonly IMapper Mapper;
@@ -20,11 +14,9 @@ public abstract class CrudRepository<TEntity, TModel> : ICrudRepository<TEntity>
         Collection = client.GetDatabase(settings.Value.RssLibraryDatabaseName).GetCollection<TModel>(dataBaseName);
     }
 
-    public async Task<IEnumerable<TEntity>> GetAll()
-        => Mapper.Map<IEnumerable<TEntity>>((await Collection.FindAsync(feed => true)).ToList());
+    public async Task<IEnumerable<TEntity>> GetAll() => Mapper.Map<IEnumerable<TEntity>>((await Collection.FindAsync(feed => true)).ToList());
 
-    public async Task<TEntity> GetById(string id)
-        => Mapper.Map<TEntity>((await Collection.FindAsync(x => x.Id == id)).ToList().FirstOrDefault());
+    public async Task<TEntity> GetById(string id) => Mapper.Map<TEntity>((await Collection.FindAsync(x => x.Id == id)).ToList().FirstOrDefault());
 
     public async Task<TEntity> Add(TEntity entity)
     {
@@ -38,6 +30,5 @@ public abstract class CrudRepository<TEntity, TModel> : ICrudRepository<TEntity>
     public async Task<UpdateResult> Update(string id, TEntity entity)
         => Mapper.Map<UpdateResult>(await Collection.ReplaceOneAsync(x => x.Id == id, Mapper.Map<TModel>(entity))).ValidateResult();
 
-    public async Task<DeleteResult> Delete(string id)
-        => Mapper.Map<DeleteResult>(await Collection.DeleteOneAsync(x => x.Id == id)).ValidateResult();
+    public async Task<DeleteResult> Delete(string id) => Mapper.Map<DeleteResult>(await Collection.DeleteOneAsync(x => x.Id == id)).ValidateResult();
 }

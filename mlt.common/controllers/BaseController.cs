@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace mlt.common.controllers;
 
 public abstract class BaseController : ControllerBase
@@ -9,9 +7,10 @@ public abstract class BaseController : ControllerBase
         try
         {
             var (success, result) = await process();
+
             if (success)
                 return result is NoContentResult ? NoContent() : (ActionResult)result;
-            
+
             return NotFound();
         }
         catch (Exception ex)

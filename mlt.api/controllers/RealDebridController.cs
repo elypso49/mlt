@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using mlt.common.controllers;
-using mlt.realdebrid.services;
+﻿namespace mlt.api.controllers;
 
-namespace mlt.api.controllers;
-
-[Route("[controller]")]
-[ApiController]
+[Route("[controller]"), ApiController]
 public class RealDebridController(IRealDebridService service) : BaseController
 {
     [HttpGet]

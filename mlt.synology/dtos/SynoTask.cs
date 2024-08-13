@@ -1,6 +1,4 @@
-﻿using mlt.synology.dtos.enums;
-
-namespace mlt.synology.dtos;
+﻿namespace mlt.synology.dtos;
 
 public class SynoTask
 {

@@ -15,9 +15,9 @@ public class RealDebridHttpClient : HttpService, IRealDebridHttpClient
     public async Task<IEnumerable<RdFileInfo>> GetDownloads()
     {
         var result = await GetAsync<IEnumerable<DownloadItem>>($"{BaseUrl}downloads");
+
         return _mapper.Map<IEnumerable<RdFileInfo>>(result);
     }
 
-    public async Task<DownloadItem> GetTorrents()
-        => await GetAsync<DownloadItem>($"{BaseUrl}torrents");
+    public async Task<DownloadItem> GetTorrents() => await GetAsync<DownloadItem>($"{BaseUrl}torrents");
 }

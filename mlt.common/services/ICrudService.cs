@@ -1,8 +1,7 @@
-﻿using mlt.common.datas.dtos;
+﻿namespace mlt.common.services;
 
-namespace mlt.common.services;
-
-public interface ICrudService<T> where T : class
+public interface ICrudService<T>
+    where T : class
 {
     public Task<IEnumerable<T>> GetAll();
 

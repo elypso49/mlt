@@ -1,12 +1,6 @@
-using System.Text.Json;
-using mlt.common.options;
-using mlt.realdebrid;
-using mlt.rss;
-using mlt.synology;
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddJsonFile($"appsettings.Development.json", optional: true, reloadOnChange: true).AddEnvironmentVariables();
+builder.Configuration.AddJsonFile("appsettings.Development.json", true, true).AddEnvironmentVariables();
 
 builder.Services.AddEndpointsApiExplorer()
        .AddSwaggerGen()
@@ -20,18 +14,8 @@ builder.Services.AddEndpointsApiExplorer()
        .GetRssDependencyInjection()
        .GetSynoDependencyInjection()
        .GetRealDebdridDependencyInjection()
-       .AddSingleton(new JsonSerializerOptions
-                     {
-                         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                         PropertyNameCaseInsensitive = true
-                     })
-       .AddControllers()
-       .AddJsonOptions(options =>
-                       {
-                           options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                           options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                       });
-
+       .AddSingleton(new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, PropertyNameCaseInsensitive = true })
+       .AddControllers();
 
 var app = builder.Build();
 

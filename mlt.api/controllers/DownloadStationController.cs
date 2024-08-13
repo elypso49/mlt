@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using mlt.common.controllers;
-using mlt.synology.services;
+﻿namespace mlt.api.controllers;
 
-namespace mlt.api.controllers;
-
-[Route("[controller]")]
-[ApiController]
+[Route("[controller]"), ApiController]
 public class DownloadStationController(IDownloadStationService service) : BaseController
 {
     [HttpGet]

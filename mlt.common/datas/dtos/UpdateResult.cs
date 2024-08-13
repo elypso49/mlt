@@ -11,7 +11,7 @@ public class UpdateResult : Acknowledgable<UpdateResult>
     {
         if (IsAcknowledged)
             return this;
-        
+
         throw new Exception("An exception occured, no feed has been updated");
     }
 }

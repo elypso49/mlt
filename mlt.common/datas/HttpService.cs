@@ -1,15 +1,10 @@
-﻿using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
-
-namespace mlt.common.datas;
+﻿namespace mlt.common.datas;
 
 public abstract class HttpService(JsonSerializerOptions jsonOptions)
 {
     private readonly HttpClient _client = new(new HttpClientHandler { ServerCertificateCustomValidationCallback = (_, _, _, _) => true });
 
-    protected void SetBearerToken(string token)
-        => _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+    protected void SetBearerToken(string token) => _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
     protected async Task<TResponse> GetAsync<TResponse>(string url)
     {

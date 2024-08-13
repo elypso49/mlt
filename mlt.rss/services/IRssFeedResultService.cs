@@ -1,7 +1,4 @@
-﻿using mlt.common.services;
-using mlt.rss.dtos;
-
-namespace mlt.rss.services;
+﻿namespace mlt.rss.services;
 
 public interface IRssFeedResultService : ICrudService<RssFeedResult>
 {

@@ -1,7 +1,4 @@
-﻿using mlt.common;
-using mlt.rss.dtos.enums;
-
-namespace mlt.rss.dtos;
+﻿namespace mlt.rss.dtos;
 
 public class RssFeedResult : Identifiable
 {
@@ -23,7 +20,7 @@ public class RssFeedResult : Identifiable
     public string? TvEpisodeId { get; init; }
     public string? TvRawTitle { get; init; }
     public string? TvInfoHash { get; init; }
-    
+
     // nyaa fields
     public int? NyaaSeeders { get; init; }
     public int? NyaaLeechers { get; init; }

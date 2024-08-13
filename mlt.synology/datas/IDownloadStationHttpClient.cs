@@ -1,6 +1,4 @@
-﻿using mlt.synology.dtos;
-
-namespace mlt.synology.datas;
+﻿namespace mlt.synology.datas;
 
 public interface IDownloadStationHttpClient
 {

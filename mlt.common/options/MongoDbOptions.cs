@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-
-namespace mlt.common.options;
+﻿namespace mlt.common.options;
 
 public class MongoDbOptions : IOptions<MongoDbOptions>
 {

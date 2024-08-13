@@ -1,8 +1,4 @@
-﻿using AutoMapper;
-using mlt.synology.datas.models;
-using mlt.synology.dtos;
-
-namespace mlt.synology;
+﻿namespace mlt.synology;
 
 public class MappingSynoProfile : Profile
 {

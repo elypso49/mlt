@@ -1,17 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using mlt.common.controllers;
-using mlt.rss.dtos;
-using mlt.rss.services;
+﻿namespace mlt.api.controllers;
 
-namespace mlt.api.controllers;
-
-[Route("[controller]")]
-[ApiController]
+[Route("[controller]"), ApiController]
 public class RssFeedsController(IRssFeedService service, IRssFeedResultService rssFeedResultService) : CrudController<RssFeed>(service)
 {
-    [HttpGet("{id}/results")]
-    [ProducesResponseType(typeof(IEnumerable<RssFeed>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpGet("{id}/results"), ProducesResponseType(typeof(IEnumerable<RssFeed>), StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status404NotFound)]
     public Task<ActionResult> GetRssFeedResultByRssFeedId(string id)
         => HandleRequest(async () =>
                          {

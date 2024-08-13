@@ -1,13 +1,4 @@
-﻿using System.Globalization;
-using System.Xml;
-using System.Xml.Linq;
-using Microsoft.Extensions.Options;
-using mlt.common.options;
-using mlt.rss.datas.models;
-using mlt.rss.dtos;
-using MongoDB.Driver;
-
-namespace mlt.rss.datas;
+﻿namespace mlt.rss.datas;
 
 internal class RssFeedProcessorRepository : IRssFeedProcessorRepository
 {
@@ -27,7 +18,7 @@ internal class RssFeedProcessorRepository : IRssFeedProcessorRepository
 
         if (rssFeed == null)
             throw new Exception("RSS Feed not found.");
-        
+
         using var reader = XmlReader.Create(rssFeed.Url);
 
         var doc = XDocument.Load(reader);
@@ -56,9 +47,9 @@ internal class RssFeedProcessorRepository : IRssFeedProcessorRepository
             var nyaaComments = int.TryParse(item.Element(nyaa + "comments")?.Value, out var comments) ? comments : 0;
             var nyaaTrusted = item.Element(nyaa + "trusted")?.Value;
             var nyaaRemake = item.Element(nyaa + "remake")?.Value;
-            
+
             if (!(await _rssFeedResultRepository.GetAll()).Any(r => (!string.IsNullOrEmpty(r.TvInfoHash) && r.TvInfoHash == tvInfoHash)
-                                                               || (!string.IsNullOrEmpty(r.NyaaInfoHash) && r.NyaaInfoHash == nyaaInfoHash)))
+                                                                 || (!string.IsNullOrEmpty(r.NyaaInfoHash) && r.NyaaInfoHash == nyaaInfoHash)))
             {
                 var result = new RssFeedResult
                              {

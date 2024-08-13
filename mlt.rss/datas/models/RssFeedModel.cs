@@ -1,6 +1,4 @@
-﻿using mlt.common;
-
-namespace mlt.rss.datas.models;
+﻿namespace mlt.rss.datas.models;
 
 public class RssFeedModel : BsonIdentifiable
 {

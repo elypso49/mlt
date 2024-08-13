@@ -1,11 +1,4 @@
-﻿using System.Text.Json;
-using AutoMapper;
-using Microsoft.Extensions.Options;
-using mlt.common.options;
-using mlt.synology.datas.models;
-using mlt.synology.dtos;
-
-namespace mlt.synology.datas;
+﻿namespace mlt.synology.datas;
 
 public class DownloadStationHttpClient(JsonSerializerOptions jsonSerializerOptions, IOptions<SynologyOptions> options, IMapper mapper)
     : SynologyHttpClient(jsonSerializerOptions, options), IDownloadStationHttpClient

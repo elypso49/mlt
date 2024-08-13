@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using mlt.rss.datas;
-using mlt.rss.services;
-
-namespace mlt.rss;
+﻿namespace mlt.rss;
 
 public static class ServiceInjection
 {

@@ -1,9 +1,4 @@
-﻿using mlt.common;
-using mlt.rss.dtos.enums;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace mlt.rss.datas.models;
+﻿namespace mlt.rss.datas.models;
 
 public class RssFeedResultModel : BsonIdentifiable
 {

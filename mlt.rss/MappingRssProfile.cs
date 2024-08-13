@@ -1,9 +1,4 @@
-﻿using AutoMapper;
-using mlt.common.datas.dtos;
-using mlt.rss.datas.models;
-using mlt.rss.dtos;
-
-namespace mlt.rss;
+﻿namespace mlt.rss;
 
 public class MappingRssProfile : Profile
 {
@@ -11,6 +6,6 @@ public class MappingRssProfile : Profile
     {
         CreateMap<RssFeedModel, RssFeed>().ReverseMap();
         CreateMap<RssFeedResultModel, RssFeedResult>().ReverseMap();
-        CreateMap<MongoDB.Driver.DeleteResult, DeleteResult>().ReverseMap();
+        CreateMap<DeleteResult, common.datas.dtos.DeleteResult>().ReverseMap();
     }
 }
