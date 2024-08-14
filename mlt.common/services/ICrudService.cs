@@ -9,7 +9,7 @@ public interface ICrudService<T>
 
     public Task<T> Add(T feed);
 
-    public Task<UpdateResult> Update(string id, T feed);
+    public Task<UpdateResponse> Update(string id, T feed);
 
-    public Task<DeleteResult> Delete(string id);
+    public Task<DeleteResponse> Delete(string id);
 }

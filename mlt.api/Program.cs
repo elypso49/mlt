@@ -24,7 +24,7 @@ app.UseCors("AllowAll")
    .UseSwaggerUI(options =>
                  {
                      options.SwaggerEndpoint("/swagger/v1/swagger.json", "Mlt Station");
-                     options.RoutePrefix = string.Empty; // Serve Swagger UI at root path
+                     options.RoutePrefix = string.Empty;
                  });
 
 app.MapControllers();

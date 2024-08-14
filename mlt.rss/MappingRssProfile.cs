@@ -6,6 +6,6 @@ public class MappingRssProfile : Profile
     {
         CreateMap<RssFeedModel, RssFeed>().ReverseMap();
         CreateMap<RssFeedResultModel, RssFeedResult>().ReverseMap();
-        CreateMap<DeleteResult, common.datas.dtos.DeleteResult>().ReverseMap();
+        CreateMap<DeleteResult, common.datas.dtos.DeleteResponse>().ReverseMap();
     }
 }

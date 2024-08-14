@@ -27,8 +27,8 @@ public abstract class CrudRepository<TEntity, TModel> : ICrudRepository<TEntity>
         return entity;
     }
 
-    public async Task<UpdateResult> Update(string id, TEntity entity)
-        => Mapper.Map<UpdateResult>(await Collection.ReplaceOneAsync(x => x.Id == id, Mapper.Map<TModel>(entity))).ValidateResult();
+    public async Task<UpdateResponse> Update(string id, TEntity entity)
+        => Mapper.Map<UpdateResponse>(await Collection.ReplaceOneAsync(x => x.Id == id, Mapper.Map<TModel>(entity))).ValidateResult();
 
-    public async Task<DeleteResult> Delete(string id) => Mapper.Map<DeleteResult>(await Collection.DeleteOneAsync(x => x.Id == id)).ValidateResult();
+    public async Task<DeleteResponse> Delete(string id) => Mapper.Map<DeleteResponse>(await Collection.DeleteOneAsync(x => x.Id == id)).ValidateResult();
 }

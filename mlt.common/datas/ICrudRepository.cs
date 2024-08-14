@@ -8,7 +8,7 @@ public interface ICrudRepository<T>
 
     Task<T> Add(T result);
 
-    Task<UpdateResult> Update(string id, T result);
+    Task<UpdateResponse> Update(string id, T result);
 
-    Task<DeleteResult> Delete(string id);
+    Task<DeleteResponse> Delete(string id);
 }

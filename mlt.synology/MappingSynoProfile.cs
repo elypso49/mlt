@@ -3,7 +3,7 @@
 public class MappingSynoProfile : Profile
 {
     public MappingSynoProfile()
-        => CreateMap<TaskDto, SynoTask>()
+        => CreateMap<TaskResponse, SynoTask>()
           .ForMember(dest => dest.Destination, opt => opt.MapFrom(src => src.Additional.Detail.Destination))
           .ForMember(dest => dest.Uri, opt => opt.MapFrom(src => src.Additional.Detail.Uri))
           .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))

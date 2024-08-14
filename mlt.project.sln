@@ -20,6 +20,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mlt.synology", "mlt.synolog
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mlt.realdebrid", "mlt.realdebrid\mlt.realdebrid.csproj", "{C7E0A173-A41D-4772-AB40-3218177BE710}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mlt.dtos", "mlt.dtos\mlt.dtos.csproj", "{3DC30AE1-152B-4572-85E8-EB21C71BD44A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mlt.workflow", "mlt.workflow\mlt.workflow.csproj", "{76D15088-C023-4C09-9DF2-5B96CE310951}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,5 +50,13 @@ Global
 		{C7E0A173-A41D-4772-AB40-3218177BE710}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7E0A173-A41D-4772-AB40-3218177BE710}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7E0A173-A41D-4772-AB40-3218177BE710}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DC30AE1-152B-4572-85E8-EB21C71BD44A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DC30AE1-152B-4572-85E8-EB21C71BD44A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DC30AE1-152B-4572-85E8-EB21C71BD44A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DC30AE1-152B-4572-85E8-EB21C71BD44A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76D15088-C023-4C09-9DF2-5B96CE310951}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76D15088-C023-4C09-9DF2-5B96CE310951}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76D15088-C023-4C09-9DF2-5B96CE310951}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76D15088-C023-4C09-9DF2-5B96CE310951}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

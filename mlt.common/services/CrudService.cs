@@ -9,7 +9,7 @@ public abstract class CrudService<T>(ICrudRepository<T> repository) : ICrudServi
 
     public Task<T> Add(T result) => repository.Add(result);
 
-    public Task<UpdateResult> Update(string id, T result) => repository.Update(id, result);
+    public Task<UpdateResponse> Update(string id, T result) => repository.Update(id, result);
 
-    public Task<DeleteResult> Delete(string id) => repository.Delete(id);
+    public Task<DeleteResponse> Delete(string id) => repository.Delete(id);
 }

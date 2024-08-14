@@ -2,7 +2,7 @@
 
 public class SynologyOptions : IOptions<SynologyOptions>
 {
-    public string Endpoint { get; set; } = null!;
+    public string BaseUrl { get; set; } = null!;
     public string Account { get; set; } = null!;
     public string Password { get; set; } = null!;
     public string Sid { get; set; } = null!;
