@@ -1,6 +1,6 @@
 ﻿namespace mlt.rss.repositories;
 
-public interface IRssFeedProcessorRepository
+internal interface IRssFeedProcessorRepository
 {
     Task ProcessFeed(string rssFeedId);
 }

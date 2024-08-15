@@ -1,6 +1,6 @@
 ﻿namespace mlt.realdebrid.clients;
 
-public interface IRealDebridHttpClient
+internal interface IRealDebridHttpClient
 {
     public Task<IEnumerable<RealDebridTorrentInfo>> GetDownloads();
     public Task<IEnumerable<RealDebridTorrentInfo>> GetTorrents();

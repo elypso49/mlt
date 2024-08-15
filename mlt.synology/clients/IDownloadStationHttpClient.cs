@@ -1,6 +1,9 @@
-﻿namespace mlt.synology.clients;
+﻿using SynoTask = mlt.dtos.synology.SynoTask;
 
-public interface IDownloadStationHttpClient
+namespace mlt.synology.clients;
+
+internal interface IDownloadStationHttpClient
 {
     public Task<IEnumerable<SynoTask>> GetTasks();
+    public Task CreateTask(string uri, string destination);
 }

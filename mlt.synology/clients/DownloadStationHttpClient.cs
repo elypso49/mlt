@@ -1,6 +1,6 @@
 ﻿namespace mlt.synology.clients;
 
-public class DownloadStationHttpClient(JsonSerializerOptions jsonSerializerOptions, IOptions<SynologyOptions> options, IMapper mapper)
+internal class DownloadStationHttpClient(JsonSerializerOptions jsonSerializerOptions, IOptions<SynologyOptions> options, IMapper mapper)
     : SynologyHttpClient(jsonSerializerOptions, options), IDownloadStationHttpClient
 {
     protected override string ParamApi => "&api=SYNO.DownloadStation.Task&version=1";
@@ -12,5 +12,13 @@ public class DownloadStationHttpClient(JsonSerializerOptions jsonSerializerOptio
         var synoTasks = mapper.Map<IEnumerable<SynoTask>>(response.Data.Tasks);
 
         return synoTasks;
+    }
+
+    public async Task CreateTask(string uri, string destination)
+    {
+        var response = await GetAsync<SynoResponse>($"{BaseDsApi}&method=create&uri={uri}&destination={destination}");
+
+        if (!response.Success)
+            throw new Exception("Error while trying to create the task");
     }
 }

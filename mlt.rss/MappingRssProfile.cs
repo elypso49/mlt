@@ -1,4 +1,6 @@
-﻿namespace mlt.rss;
+﻿using mlt.common.datas.dtos;
+
+namespace mlt.rss;
 
 public class MappingRssProfile : Profile
 {
@@ -6,6 +8,8 @@ public class MappingRssProfile : Profile
     {
         CreateMap<RssFeedModel, RssFeed>().ReverseMap();
         CreateMap<RssFeedResultModel, RssFeedResult>().ReverseMap();
-        CreateMap<DeleteResult, common.datas.dtos.DeleteResponse>().ReverseMap();
+        CreateMap<DeleteResult.Acknowledged, DeleteResponse>();
+        // CreateMap<UpdateResult.Acknowledged, UpdateResponse>();
+        CreateMap<ReplaceOneResult.Acknowledged, UpdateResponse>();
     }
 }

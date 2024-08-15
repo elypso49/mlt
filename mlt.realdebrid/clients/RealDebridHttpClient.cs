@@ -1,6 +1,6 @@
 ﻿namespace mlt.realdebrid.clients;
 
-public class RealDebridHttpClient(JsonSerializerOptions jsonSerializerOptions, IOptions<RealDebridOptions> options, IMapper mapper)
+internal class RealDebridHttpClient(JsonSerializerOptions jsonSerializerOptions, IOptions<RealDebridOptions> options, IMapper mapper)
     : HttpService(jsonSerializerOptions, options.Value.BaseUrl, options.Value.ApiToken), IRealDebridHttpClient
 {
     public async Task<IEnumerable<RealDebridTorrentInfo>> GetDownloads()

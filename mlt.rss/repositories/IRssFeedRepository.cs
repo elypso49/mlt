@@ -1,3 +1,3 @@
 ﻿namespace mlt.rss.repositories;
 
-public interface IRssFeedRepository : ICrudRepository<RssFeed>;
+internal interface IRssFeedRepository : ICrudRepository<RssFeed>;

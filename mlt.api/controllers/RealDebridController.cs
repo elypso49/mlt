@@ -30,20 +30,12 @@ public class RealDebridController(IRealDebridService service) : BaseController
                              return (result != null, Ok(result));
                          });
 
-    [HttpPost("/addmagnet")]
-    public Task<ActionResult> PostAddMagnet(string[] links)
-        => HandleRequest(async () =>
-                         {
-                             var result = await service.AddMagnet(links);
-
-                             return (result != null, Ok(result));
-                         });
     
     [HttpPost("/addtorrent")]
     public Task<ActionResult> AddTorrentFile(string[] links)
         => HandleRequest(async () =>
                          {
-                             var result = await service.AddTorrentFile(links);
+                             var result = await service.AddTorrentsInBatchesWithRetry(links);
 
                              return (result != null, Ok(result));
                          });

@@ -1,6 +1,6 @@
 ﻿namespace mlt.synology.clients.dtos;
 
-public class TaskResponse
+internal class SynoTaskResponse
 {
     public string Id { get; set; }
     public long Size { get; set; }

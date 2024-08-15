@@ -1,6 +1,6 @@
 ﻿namespace mlt.synology.clients.dtos;
 
-public class Transfer
+internal class Transfer
 {
     public int DownloadedPieces { get; set; }
     public long SizeDownloaded { get; set; }

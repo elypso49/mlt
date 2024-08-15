@@ -1,6 +1,6 @@
 ﻿namespace mlt.synology.clients.dtos;
 
-public class Detail
+internal class Detail
 {
     public long CompletedTime { get; set; }
     public int ConnectedLeechers { get; set; }

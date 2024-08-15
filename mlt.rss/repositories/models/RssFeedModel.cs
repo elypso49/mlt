@@ -1,6 +1,6 @@
 ﻿namespace mlt.rss.repositories.models;
 
-public class RssFeedModel : BsonIdentifiable
+internal class RssFeedModel : BsonIdentifiable
 {
     public string Name { get; set; } = null!;
     public string Url { get; set; } = null!;

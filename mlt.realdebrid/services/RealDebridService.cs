@@ -1,6 +1,8 @@
-﻿namespace mlt.realdebrid.services;
+﻿using System.Text.RegularExpressions;
 
-public class RealDebridService(IRealDebridHttpClient rdClient) : IRealDebridService
+namespace mlt.realdebrid.services;
+
+internal partial class RealDebridService(IRealDebridHttpClient rdClient, IOptions<RealDebridOptions> options) : IRealDebridService
 {
     public Task<IEnumerable<RealDebridTorrentInfo>> GetDownloads()
         => rdClient.GetDownloads();
@@ -8,58 +10,75 @@ public class RealDebridService(IRealDebridHttpClient rdClient) : IRealDebridServ
     public Task<IEnumerable<RealDebridTorrentInfo>> GetTorrents()
         => rdClient.GetTorrents();
 
-    public async Task<IEnumerable<RealDebridTorrentInfo>> UnrestrictLinks(string[] links)
+    public async Task<IEnumerable<RealDebridTorrentInfo>> UnrestrictLinks(IEnumerable<string> links)
         => await Task.WhenAll(links.Select(rdClient.UnrestrictLink).ToList());
-
-    public async Task<List<string>> AddMagnet(string[] magnets)
+    
+    private async Task<List<string>> AddTorrents(IEnumerable<string> torrents)
     {
-        var result = new List<string>();
+        var addTorrentTasks = torrents.Select(AddTorrent);
+        var results = await Task.WhenAll(addTorrentTasks);
 
-        foreach (var magnet in magnets)
-        {
-            var torrentId = await rdClient.AddMagnet(magnet);
-            var torrent = await rdClient.GetTorrentInfo(torrentId);
-
-            foreach (var file in torrent.Files)
-            {
-                var extension = Path.GetExtension(file.Path);
-                file.Selected = extension == ".mkv";
-            }
-
-            var selectedFiles = string.Join(',', torrent.Files.Where(x => x.Selected == true).Select(x => x.Id));
-
-            if (!string.IsNullOrWhiteSpace(selectedFiles))
-                await rdClient.SelectTorrentFiles(torrentId, selectedFiles);
-
-            result.Add(torrentId);
-        }
-
-        return result;
+        return results.ToList();
     }
     
-    public async Task<List<string>> AddTorrentFile(string[] torrentFiles)
+    public async Task<IEnumerable<string>> AddTorrentsInBatchesWithRetry(IEnumerable<string> torrentLinks, int batchSize = 2, int initialDelayMilliseconds = 1000, int maxRetries = 3)
     {
-        var result = new List<string>();
+        var torrentLinksLst = torrentLinks.ToList();
+        var results = new List<string>();
 
-        foreach (var torrentFile in torrentFiles)
+        for (var i = 0; i < torrentLinksLst.Count; i += batchSize)
         {
-            var torrentId = await rdClient.AddTorrent(torrentFile);
-            var torrent = await rdClient.GetTorrentInfo(torrentId);
+            var batch = torrentLinksLst.Skip(i).Take(batchSize).ToArray();
+            var retries = 0;
+            var success = false;
 
-            foreach (var file in torrent.Files)
+            while (!success && retries < maxRetries)
             {
-                var extension = Path.GetExtension(file.Path);
-                file.Selected = extension == ".mkv";
+                try
+                {
+                    var batchResults = await AddTorrents(batch);
+                    results.AddRange(batchResults);
+                    success = true; // Successfully processed the batch
+                }
+                catch (HttpRequestException ex) when ((int)ex.StatusCode! == 429) // 429 Too Many Requests
+                {
+                    retries++;
+                    var delay = initialDelayMilliseconds * (int)Math.Pow(2, retries); // Exponential backoff
+                    await Task.Delay(delay);
+                }
             }
 
-            var selectedFiles = string.Join(',', torrent.Files.Where(x => x.Selected == true).Select(x => x.Id));
+            if (!success)
+            {
+                throw new Exception("Failed to process batch after multiple retries.");
+            }
 
-            if (!string.IsNullOrWhiteSpace(selectedFiles))
-                await rdClient.SelectTorrentFiles(torrentId, selectedFiles);
-
-            result.Add(torrentId);
+            if (i + batchSize < torrentLinksLst.Count)
+            {
+                await Task.Delay(initialDelayMilliseconds); // Delay between batches
+            }
         }
 
-        return result;
+        return results;
     }
+    
+    public Task<RealDebridTorrentInfo> GetTorrentInfo(string torrentId)
+    => rdClient.GetTorrentInfo(torrentId);
+
+    private async Task<string> AddTorrent(string torrentSource)
+    {
+        var torrentId = MagnetRegex().IsMatch(torrentSource) ? await rdClient.AddMagnet(torrentSource) : await rdClient.AddTorrent(torrentSource);
+        var torrent = await rdClient.GetTorrentInfo(torrentId);
+
+        var selectedFiles = string.Join(',', torrent.Files.Where(file => options.Value.ExtensionFilterList.Contains(Path.GetExtension(file.Path))).Select(file => file.Id));
+
+        if (!string.IsNullOrWhiteSpace(selectedFiles))
+            await rdClient.SelectTorrentFiles(torrentId, selectedFiles);
+
+        return torrentId;
+    }
+    
+
+    [GeneratedRegex(@"^magnet:\?xt=urn:.*$")]
+    private static partial Regex MagnetRegex();
 }

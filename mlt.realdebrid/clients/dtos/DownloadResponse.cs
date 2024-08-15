@@ -1,6 +1,6 @@
 ﻿namespace mlt.realdebrid.clients.dtos;
 
-public class DownloadResponse
+internal class DownloadResponse
 {
     public string Id { get; set; } = null!;
     public string Filename { get; set; } = null!;

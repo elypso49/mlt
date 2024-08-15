@@ -1,6 +1,6 @@
 ﻿namespace mlt.realdebrid.clients.dtos;
 
-public class TorrentModel
+internal class TorrentModel
 {
     public string Id { get; set; }= null!;
     public string Filename { get; set; }= null!;
@@ -14,11 +14,4 @@ public class TorrentModel
     public DateTime? Added { get; set; }
     public List<string>? Links { get; set; } = [];
     public DateTime? Ended { get; set; }
-}
-
-public class TorrentFile
-{
-    public int Id { get; set; }
-    public string Path { get; set; }= null!;
-    public int Selected { get; set; }
 }

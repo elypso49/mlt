@@ -1,3 +1,5 @@
+using mlt.workflow;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.Development.json", true, true).AddEnvironmentVariables();
@@ -14,6 +16,7 @@ builder.Services.AddEndpointsApiExplorer()
        .GetRssDependencyInjection()
        .GetSynoDependencyInjection()
        .GetRealDebdridDependencyInjection()
+       .GetWorkflowDependencyInjection()
        .AddSingleton(new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, PropertyNameCaseInsensitive = true })
        .AddControllers();
 

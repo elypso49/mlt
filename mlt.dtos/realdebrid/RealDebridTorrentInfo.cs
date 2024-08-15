@@ -12,10 +12,3 @@ public class RealDebridTorrentInfo
     public DateTime? CreatedOn { get; init; } = null!;
     public List<RealDebridFileInfo> Files { get; set; } = [];
 }
-
-public class RealDebridFileInfo
-{
-    public int? Id { get; set; } = null!;
-    public string Path { get; set; } = null!;
-    public bool? Selected { get; set; } = null!;
-}
