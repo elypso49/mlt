@@ -8,8 +8,11 @@ on:
     paths:
       - 'mlt.api/**'
       - 'mlt.common/**'
-      - 'mlt.dal/**'
-      - 'mlt.services/**'
+      - 'mlt.dtos/**'
+      - 'mlt.realdebrid/**'
+      - 'mlt.rss/**'
+      - 'mlt.synology/**'
+      - 'mlt.workflow/**'
 
 jobs:
   build:

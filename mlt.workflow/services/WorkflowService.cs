@@ -63,6 +63,7 @@ public class WorkflowService(
         var fileNameRegex = !string.IsNullOrWhiteSpace(rssFlux.FileNameRegex) ? rssFlux.FileNameRegex : @"S(\d{2})E(\d{2})";
 
         var seasonFolder = Regex.Match(rssFeedResult.Title!, fileNameRegex) is { Success: true } match ? $"/Season {int.Parse(match.Groups[1].Value):00}" : string.Empty;
+        seasonFolder = string.IsNullOrWhiteSpace(seasonFolder) && Regex.Match(rssFeedResult.Title!, @"Season (\d+)") is { Success: true } matchSeason ? $"/Season {int.Parse(matchSeason.Groups[1].Value):00}" : string.Empty;
         seasonFolder = string.IsNullOrWhiteSpace(seasonFolder) && rssFlux.ForceFirstSeasonFolder ? "/Season 01" : seasonFolder;
 
         var destinationFolder = $"{rssFlux.DestinationFolder}/{(string.IsNullOrWhiteSpace(rssFeedResult.NyaaInfoHash) ? rssFeedResult.TvShowName : rssFlux.Name)}";
