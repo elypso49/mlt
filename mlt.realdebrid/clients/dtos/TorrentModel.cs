@@ -8,7 +8,7 @@ internal class TorrentModel
     // public long Bytes { get; set; }
     // public string Host { get; set; }= null!;
     // public int Split { get; set; }
-    public int Progress { get; set; }  //from 0 to 100
+    public double Progress { get; set; }  //from 0 to 100
     public string Status { get; set; } = null!; //magnet_error, magnet_conversion, waiting_files_selection, queued, downloading, downloaded, error, virus, compressing, uploading, dead
     public List<TorrentFile>? Files { get; set; } = [];
     public DateTime? Added { get; set; }

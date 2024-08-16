@@ -3,6 +3,7 @@ namespace mlt.dtos.rss.enums;
 [Flags]
 public enum StateValue
 {
+    NoProcessed = 0,
     Read = 1 << 0,       // 00001
     Debrided = 1 << 1,   // 00010
     Downloaded = 1 << 2, // 00100

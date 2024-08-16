@@ -5,12 +5,21 @@ namespace mlt.api.controllers;
 [Route("[controller]"), ApiController]
 public class WorkflowController(IWorkflowService service) : BaseController
 {
-    [HttpGet]
-    public Task<ActionResult> GetTasks()
+    [HttpPost]
+    public Task<ActionResult> DownloadAll()
         => HandleRequest(async () =>
                          {
                              var result = await service.DownloadAll();
 
                              return (result, Ok(result));
                          });
+    
+    // [HttpGet]
+    // public Task<ActionResult> GetTasks()
+    //     => HandleRequest(async () =>
+    //                      {
+    //                          var result = await service.Process();
+    //
+    //                          return (result.Any(), Ok(result));
+    //                      });
 }

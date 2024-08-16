@@ -5,5 +5,5 @@ namespace mlt.synology.clients;
 internal interface IDownloadStationHttpClient
 {
     public Task<IEnumerable<SynoTask>> GetTasks();
-    public Task CreateTask(string uri, string destination);
+    public Task<(string uri, bool isSuccess)> CreateTask(string uri, string destination);
 }

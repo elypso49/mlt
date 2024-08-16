@@ -1,14 +1,17 @@
-﻿namespace mlt.synology.clients;
+﻿using mlt.common.extensions;
+
+namespace mlt.synology.clients;
 
 internal class FileStationHttpClient(JsonSerializerOptions jsonSerializerOptions, IOptions<SynologyOptions> options, IMapper mapper)
-    : SynologyHttpClient(jsonSerializerOptions, options), IFileStationHttpClient
+    : SynologyHttpClient(jsonSerializerOptions, options.Value, "webapi/entry.cgi"), IFileStationHttpClient
 {
-    protected override string ParamApi => "&api=SYNO.FileStation.List&version=2";
+    // protected override string ParamApi => "&api=SYNO.FileStation.List&version=2";
+    private const string ListApi = "SYNO.FileStation.List";
+    private const string CreateFolderApi = "SYNO.FileStation.CreateFolder";
 
     public async Task<List<SynoFolder>> GetFoldersWithSubs(string? folderPath = null)
     {
         string method, parameters = string.Empty;
-        IEnumerable<FileItem> fileItems;
 
         if (string.IsNullOrWhiteSpace(folderPath))
             method = "list_share";
@@ -18,20 +21,20 @@ internal class FileStationHttpClient(JsonSerializerOptions jsonSerializerOptions
             parameters = $"&folder_path={folderPath}";
         }
 
-        var response = await GetAsync<SynoResponse>($"{BaseFsApi}&method={method}{parameters}");
+        var response = await GetSynoAsync<SynoResponse>(ListApi, "2", method, parameters);
 
-        fileItems = string.IsNullOrWhiteSpace(folderPath)
+        var fileItems = string.IsNullOrWhiteSpace(folderPath)
             ? response.Data.Shares.Where(x => x.IsDir && options.Value.SharedFoldersList.Any(y => y == x.Name))
             : response.Data.Files.Where(x => x.IsDir);
 
         var synoFolders = mapper.Map<IEnumerable<SynoFolder>>(fileItems).ToList();
 
         foreach (var folder in synoFolders)
-        {
-            var path = folder.Path.Replace("/", "%2F");
-            folder.Folders.AddRange(await GetFoldersWithSubs(path));
-        }
+            folder.Folders.AddRange(await GetFoldersWithSubs(folder.Path.ToUrlProof()));
 
         return synoFolders;
     }
+
+    public async Task<bool> CreateFolder(string folderPath, string folderName)
+        => (await GetSynoAsync<SynoResponse>(CreateFolderApi, "2", "create", $"&folder_path={folderPath.ToUrlProof()}&name={folderName}")).Success;
 }

@@ -1,4 +1,6 @@
-﻿namespace mlt.dtos.rss;
+﻿using mlt.dtos.realdebrid;
+
+namespace mlt.dtos.rss;
 
 public class RssFeedResult : Identifiable
 {
@@ -10,7 +12,7 @@ public class RssFeedResult : Identifiable
 
     // custom fields
     public DateTime CreatedDate { get; init; } = DateTime.Now;
-    public StateValue State { get; init; } = 0;
+    public StateValue State { get; set; } = 0;
     public DateTime? UpdatedDate { get; init; }
 
     // tv fields
@@ -32,4 +34,8 @@ public class RssFeedResult : Identifiable
     public int? NyaaComments { get; init; }
     public string? NyaaTrusted { get; init; }
     public string? NyaaRemake { get; init; }
+
+    // Process fields
+    // public RealDebridTorrentInfo RealDebridTorrentInfo { get; set; } = new();
+    // public List<string> DebridedUrl { get; set; }
 }

@@ -7,6 +7,13 @@ internal class DownloadStationService(IDownloadStationHttpClient dsClient) : IDo
     public async Task<IEnumerable<SynoTask>> GetTasks()
         => await dsClient.GetTasks();
 
-    public Task CreateTask(IEnumerable<string> uri, string? destination = "Movies")
-        => Task.WhenAll(uri.Select(link => dsClient.CreateTask(link, destination!)).ToArray());
+    public async Task<List<(string uri, bool isSuccess)>> CreateTask(IEnumerable<string> uri, string? destination = "Movies")
+    {
+        var result = new List<(string uri, bool isSuccess)>();
+
+        foreach (var uriItem in uri)
+            result.Add(await dsClient.CreateTask(uriItem, destination!));
+
+        return result;
+    }
 }

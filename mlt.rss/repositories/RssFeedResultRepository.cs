@@ -5,4 +5,7 @@ internal class RssFeedResultRepository(IOptions<MongoDbOptions> settings, IMappe
 {
     public async Task<IEnumerable<RssFeedResult>> GetByRssFeedId(string rssFeedId)
         => Mapper.Map<IEnumerable<RssFeedResult>>((await Collection.FindAsync(result => result.RssFeedId == rssFeedId)).ToList());
+
+    public async Task<IEnumerable<RssFeedResult>> GetByStatus(StateValue stateValue)
+        => Mapper.Map<IEnumerable<RssFeedResult>>((await Collection.FindAsync(result => result.State == stateValue)).ToList());
 }
