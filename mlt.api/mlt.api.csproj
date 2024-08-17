@@ -17,7 +17,7 @@
         <ProjectReference Include="..\mlt.realdebrid\mlt.realdebrid.csproj"/>
         <ProjectReference Include="..\mlt.rss\mlt.rss.csproj"/>
         <ProjectReference Include="..\mlt.synology\mlt.synology.csproj"/>
-        <ProjectReference Include="..\mlt.workflow\mlt.workflow.csproj" />
+        <ProjectReference Include="..\mlt.workflow\mlt.workflow.csproj"/>
     </ItemGroup>
 
 </Project>

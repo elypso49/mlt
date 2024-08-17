@@ -11,7 +11,7 @@ public class DownloadStationController(IDownloadStationService service) : BaseCo
 
                              return (result != null, Ok(result));
                          });
-    
+
     [HttpGet("CreateTask")]
     public Task<ActionResult> CreateTask(string uri, string? destination)
         => HandleRequest(async () =>

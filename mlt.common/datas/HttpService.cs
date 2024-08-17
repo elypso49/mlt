@@ -48,6 +48,7 @@ public abstract class HttpService
             response.EnsureSuccessStatusCode();
 
             var responseJson = await response.Content.ReadAsStringAsync();
+
             return string.IsNullOrWhiteSpace(responseJson) ? null : JsonSerializer.Deserialize<TResponse>(responseJson, _jsonOptions)!;
         }
         catch (Exception e)

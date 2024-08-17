@@ -9,14 +9,12 @@ public class MappingRdProfile : Profile
            .ForMember(dest => dest.Status, opt => opt.Ignore())
            .ForMember(dest => dest.Links, opt => opt.Ignore())
            .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(src => src.Generated));
-        
+
         CreateMap<TorrentModel, RealDebridTorrentInfo>()
            .ForMember(dest => dest.Link, opt => opt.Ignore())
            .ForMember(dest => dest.Download, opt => opt.Ignore())
-           .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(src => src.Added))
-           // .ForMember(dest => dest.Files, opt => opt.MapFrom(src => src.Files))
-            ;
-        
+           .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(src => src.Added));
+
         CreateMap<TorrentFile, RealDebridFileInfo>();
     }
 }

@@ -9,6 +9,6 @@ public class SynologyOptions : IOptions<SynologyOptions>
     public string Token { get; set; } = null!;
     public string SharedFolders { get; set; } = null!;
     public List<string> SharedFoldersList => SharedFolders.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
-    
+
     public SynologyOptions Value => this;
 }

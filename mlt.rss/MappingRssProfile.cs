@@ -9,7 +9,6 @@ public class MappingRssProfile : Profile
         CreateMap<RssFeedModel, RssFeed>().ReverseMap();
         CreateMap<RssFeedResultModel, RssFeedResult>().ReverseMap();
         CreateMap<DeleteResult.Acknowledged, DeleteResponse>();
-        // CreateMap<UpdateResult.Acknowledged, UpdateResponse>();
         CreateMap<ReplaceOneResult.Acknowledged, UpdateResponse>();
     }
 }

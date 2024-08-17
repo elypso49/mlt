@@ -4,7 +4,8 @@ public abstract class CrudController<T>(ICrudService<T> service) : BaseControlle
     where T : Identifiable
 {
     [HttpGet]
-    public Task<ActionResult> GetAll() => HandleRequest(async () => (true, Ok(await service.GetAll())));
+    public Task<ActionResult> GetAll()
+        => HandleRequest(async () => (true, Ok(await service.GetAll())));
 
     [HttpGet("{id}")]
     public Task<ActionResult> GetById(string id)
@@ -35,7 +36,8 @@ public abstract class CrudController<T>(ICrudService<T> service) : BaseControlle
                              return (true, NoContent());
                          });
 
-    private async Task<bool> CheckIfExists(string id) => await service.GetById(id) != null;
+    private async Task<bool> CheckIfExists(string id)
+        => await service.GetById(id) != null;
 
     [HttpDelete("{id}")]
     public Task<ActionResult> Delete(string id)

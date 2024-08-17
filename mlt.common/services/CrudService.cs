@@ -3,13 +3,18 @@
 public abstract class CrudService<T>(ICrudRepository<T> repository) : ICrudService<T>
     where T : class
 {
-    public Task<IEnumerable<T>> GetAll() => repository.GetAll();
+    public Task<IEnumerable<T>> GetAll()
+        => repository.GetAll();
 
-    public Task<T> GetById(string id) => repository.GetById(id);
+    public Task<T> GetById(string id)
+        => repository.GetById(id);
 
-    public Task<T> Add(T result) => repository.Add(result);
+    public Task<T> Add(T result)
+        => repository.Add(result);
 
-    public Task<UpdateResponse> Update(string id, T result) => repository.Update(id, result);
+    public Task<UpdateResponse> Update(string id, T result)
+        => repository.Update(id, result);
 
-    public Task<DeleteResponse> Delete(string id) => repository.Delete(id);
+    public Task<DeleteResponse> Delete(string id)
+        => repository.Delete(id);
 }

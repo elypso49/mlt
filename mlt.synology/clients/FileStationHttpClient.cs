@@ -5,7 +5,6 @@ namespace mlt.synology.clients;
 internal class FileStationHttpClient(JsonSerializerOptions jsonSerializerOptions, IOptions<SynologyOptions> options, IMapper mapper)
     : SynologyHttpClient(jsonSerializerOptions, options.Value, "webapi/entry.cgi"), IFileStationHttpClient
 {
-    // protected override string ParamApi => "&api=SYNO.FileStation.List&version=2";
     private const string ListApi = "SYNO.FileStation.List";
     private const string CreateFolderApi = "SYNO.FileStation.CreateFolder";
 
@@ -36,5 +35,6 @@ internal class FileStationHttpClient(JsonSerializerOptions jsonSerializerOptions
     }
 
     public async Task<bool> CreateFolder(string folderPath, string folderName)
-        => (await GetSynoAsync<SynoResponse>(CreateFolderApi, "2", "create", $"&folder_path={folderPath.ToUrlSafeString()}&name={folderName.RemoveUnsafeFolderCharacters()}")).Success;
+        => (await GetSynoAsync<SynoResponse>(CreateFolderApi, "2", "create", $"&folder_path={folderPath.ToUrlSafeString()}&name={folderName.RemoveUnsafeFolderCharacters()}"))
+           .Success;
 }

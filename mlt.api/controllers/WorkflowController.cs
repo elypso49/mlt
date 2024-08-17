@@ -13,13 +13,4 @@ public class WorkflowController(IWorkflowService service) : BaseController
 
                              return (result, Ok(result));
                          });
-    
-    // [HttpGet]
-    // public Task<ActionResult> GetTasks()
-    //     => HandleRequest(async () =>
-    //                      {
-    //                          var result = await service.Process();
-    //
-    //                          return (result.Any(), Ok(result));
-    //                      });
 }

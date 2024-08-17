@@ -4,7 +4,7 @@ public static class StringExtensions
 {
     public static string ToUrlSafeString(this string destination)
         => Uri.EscapeDataString(destination);
-    
+
     public static string RemoveUnsafeFolderCharacters(this string folderName)
     {
         char[] invalidChars = ['\\', ':', '*', '?', '"', '<', '>', '|', '\0'];
@@ -12,5 +12,4 @@ public static class StringExtensions
 
         return safeString.Replace("  ", " ");
     }
-
 }

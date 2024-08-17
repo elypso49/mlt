@@ -8,7 +8,6 @@ internal class DownloadStationHttpClient(
     IMapper mapper,
     IFileStationHttpClient fileStationHttpClient) : SynologyHttpClient(jsonSerializerOptions, synologyOptions.Value, "webapi/DownloadStation/task.cgi"), IDownloadStationHttpClient
 {
-    // protected override string ParamApi => "&api=SYNO.DownloadStation.Task&version=1";
     private const string TaskApi = "SYNO.DownloadStation.Task";
 
     public async Task<IEnumerable<SynoTask>> GetTasks()
@@ -24,7 +23,7 @@ internal class DownloadStationHttpClient(
     {
         var safeUri = uri.ToUrlSafeString();
         var safeDestination = destination.RemoveUnsafeFolderCharacters();
-        
+
         var response = await GetSynoAsync<SynoResponse>(TaskApi, "3", "create", $"&uri={safeUri}&destination={safeDestination}");
 
         if (!response.Success)
@@ -44,7 +43,7 @@ internal class DownloadStationHttpClient(
             if (!response.Success)
                 throw new Exception($"Unable to create task {safeUri} for destination {safeDestination}");
         }
-        
+
         return (uri, response.Success);
     }
 }

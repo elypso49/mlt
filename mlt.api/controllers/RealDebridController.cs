@@ -30,7 +30,6 @@ public class RealDebridController(IRealDebridService service) : BaseController
                              return (result != null, Ok(result));
                          });
 
-    
     [HttpPost("/addtorrent")]
     public Task<ActionResult> AddTorrentFile(string[] links)
         => HandleRequest(async () =>

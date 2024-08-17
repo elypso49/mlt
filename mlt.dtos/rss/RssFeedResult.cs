@@ -1,6 +1,4 @@
-﻿using mlt.dtos.realdebrid;
-
-namespace mlt.dtos.rss;
+﻿namespace mlt.dtos.rss;
 
 public class RssFeedResult : Identifiable
 {
