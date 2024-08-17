@@ -1,65 +1,35 @@
-using mlt.dal;
-using mlt.dal.Options;
-using ServiceInjection = mlt.services.ServiceInjection;
+using mlt.workflow;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
-                                       {
-                                           var env = hostingContext.HostingEnvironment;
+builder.Configuration.AddJsonFile("appsettings.Development.json", true, true).AddEnvironmentVariables();
 
-                                           config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                                                 .AddJsonFile($"appsettings.Development.json", optional: true, reloadOnChange: true);
-
-                                           config.AddEnvironmentVariables();
-                                       });
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
-
-builder.Services.AddAutoMapper(typeof(MappingProfile));
-
-ServiceInjection.GetDependencyInjection(builder.Services);
-mlt.dal.ServiceInjection.GetDependencyInjection(builder.Services);
-
-// builder.Services.Configure<MongoDbOptions>(options => builder.Configuration.GetSection(nameof(MongoDbOptions)).Bind(options));
-builder.Services.Configure<MongoDbOptions>(builder.Configuration.GetSection(nameof(MongoDbOptions)));
+builder.Services.AddEndpointsApiExplorer()
+       .AddSwaggerGen()
+       .AddAutoMapper(typeof(MappingRssProfile))
+       .AddAutoMapper(typeof(MappingSynoProfile))
+       .AddAutoMapper(typeof(MappingRdProfile))
+       .AddCors(options => { options.AddPolicy("AllowAll", x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()); })
+       .Configure<MongoDbOptions>(builder.Configuration.GetSection(nameof(MongoDbOptions)))
+       .Configure<SynologyOptions>(builder.Configuration.GetSection(nameof(SynologyOptions)))
+       .Configure<RealDebridOptions>(builder.Configuration.GetSection(nameof(RealDebridOptions)))
+       .GetRssDependencyInjection()
+       .GetSynoDependencyInjection()
+       .GetRealDebdridDependencyInjection()
+       .GetWorkflowDependencyInjection()
+       .AddSingleton(new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, PropertyNameCaseInsensitive = true })
+       .AddControllers();
 
 var app = builder.Build();
 
-app.UseSwagger();
-
-app.UseSwaggerUI(options =>
+app.UseCors("AllowAll")
+   .UseSwagger()
+   .UseSwaggerUI(options =>
                  {
-                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                     options.RoutePrefix = string.Empty; // Serve Swagger UI at root path
+                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Mlt Station");
+                     options.RoutePrefix = string.Empty;
                  });
 
 app.MapControllers();
 
 app.Run();
-
-// var summaries = new[]
-//                 {
-//                     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-//                 };
-//
-// app.MapGet("/weatherforecast",
-//            () =>
-//            {
-//                var forecast = Enumerable.Range(1, 5)
-//                                         .Select(index => new WeatherForecast(DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-//                                                                              Random.Shared.Next(-20, 55),
-//                                                                              summaries[Random.Shared.Next(summaries.Length)]))
-//                                         .ToArray();
-//
-//                return forecast;
-//            })
-//    .WithName("GetWeatherForecast")
-//    .WithOpenApi();
-
-// record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-// {
-//     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-// }

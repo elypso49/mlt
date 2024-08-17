@@ -1,0 +1,60 @@
+<table *ngIf="rssData" class="table table-striped">
+  <tbody>
+  <ng-container *ngFor="let rssFeed of rssData; let i = index">
+    <tr>
+      <td>{{ rssFeed.name }}</td>
+      <td>{{ rssFeed.category }}</td>
+      <input type="text" class="form-control" [(ngModel)]="rssFeed.destinationFolder" placeholder="Destination folder"/>
+      <td>
+        <button class="btn" (click)="checkAll(rssFeed, i, areAllItemsSelected(rssFeed.results))">
+          <i *ngIf="!areAllItemsSelected(rssFeed.results)" class="fa-regular fa-square"></i>
+          <i *ngIf="areAllItemsSelected(rssFeed.results)" class="fa-regular fa-square-check"></i>
+        </button>
+      </td>
+      <td>
+        <button class="btn" (click)="debridAll(rssFeed, i)" [disabled]="debridingIndexes.includes(i)">
+          <i class="fa-solid fa-link-slash fa-xs"></i>
+        </button>
+      </td>
+      <td>
+        <button class="btn" (click)="downloadAll(rssFeed, i)" [disabled]="downloadingIndexes.includes(i)">
+          <i class="fa-solid fa-download fa-xs"></i>
+        </button>
+      </td>
+      <td>
+        <button *ngIf="!expandedIndexes.includes(i)" class="btn" (click)="toggleItems(i)"><i
+          class="fa-solid fa-chevron-right fa-xs"></i></button>
+        <button *ngIf="expandedIndexes.includes(i)" class="btn" (click)="toggleItems(i)"><i
+          class="fa-solid fa-chevron-down fa-xs"></i></button>
+      </td>
+    </tr>
+    <tr *ngIf="expandedIndexes.includes(i)">
+      <td colspan="2">
+        <table>
+          <tbody>
+          <tr *ngFor="let item of rssFeed.results; let j = index">
+            <td>
+              <input class="form-check-input" type="checkbox" id="flexCheckDefault" [(ngModel)]="item.checked"/>
+            </td>
+            <td>
+              {{ item.title }}
+            </td>
+            <td>
+              <button class="btn" (click)="debridOne(item, i, j)" [disabled]="debridingSubIndexes.includes(i * 10 + j)">
+                <i *ngIf="hasFlag(item.state, StateValue.Debrided)" class="fa-solid fa-check"></i>
+                <i *ngIf="!hasFlag(item.state, StateValue.Debrided)" class="fa-solid fa-link-slash fa-xs"></i>
+              </button>
+            </td>
+            <button class="btn" (click)="downloadOne(item, rssFeed, i, j)"
+                    [disabled]="downloadingSubIndexes.includes(i * 10 + j)">
+              <i *ngIf="hasFlag(item.state, StateValue.Downloaded)" class="fa-solid fa-check"></i>
+              <i *ngIf="!hasFlag(item.state, StateValue.Downloaded)" class="fa-solid fa-download fa-xs"></i>
+            </button>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </ng-container>
+  </tbody>
+</table>

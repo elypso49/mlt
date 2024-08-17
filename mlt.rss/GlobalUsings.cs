@@ -1,0 +1,19 @@
+﻿// Global using directives
+global using System.Globalization;
+global using System.Xml;
+global using System.Xml.Linq;
+global using AutoMapper;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Options;
+global using mlt.common;
+global using mlt.common.datas;
+global using mlt.common.options;
+global using mlt.common.services;
+global using mlt.dtos.rss;
+global using mlt.dtos.rss.enums;
+global using mlt.rss.repositories;
+global using mlt.rss.repositories.models;
+global using mlt.rss.services;
+global using MongoDB.Bson;
+global using MongoDB.Bson.Serialization.Attributes;
+global using MongoDB.Driver;
