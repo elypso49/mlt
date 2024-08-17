@@ -30,11 +30,11 @@ internal class FileStationHttpClient(JsonSerializerOptions jsonSerializerOptions
         var synoFolders = mapper.Map<IEnumerable<SynoFolder>>(fileItems).ToList();
 
         foreach (var folder in synoFolders)
-            folder.Folders.AddRange(await GetFoldersWithSubs(folder.Path.ToUrlProof()));
+            folder.Folders.AddRange(await GetFoldersWithSubs(folder.Path.ToUrlSafeString()));
 
         return synoFolders;
     }
 
     public async Task<bool> CreateFolder(string folderPath, string folderName)
-        => (await GetSynoAsync<SynoResponse>(CreateFolderApi, "2", "create", $"&folder_path={folderPath.ToUrlProof()}&name={folderName}")).Success;
+        => (await GetSynoAsync<SynoResponse>(CreateFolderApi, "2", "create", $"&folder_path={folderPath.ToUrlSafeString()}&name={folderName.RemoveUnsafeFolderCharacters()}")).Success;
 }

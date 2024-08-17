@@ -22,11 +22,14 @@ internal class DownloadStationHttpClient(
 
     public async Task<(string uri, bool isSuccess)> CreateTask(string uri, string destination)
     {
-        var response = await GetSynoAsync<SynoResponse>(TaskApi, "3", "create", $"&uri={uri}&destination={destination.ToUrlProof()}");
+        var safeUri = uri.ToUrlSafeString();
+        var safeDestination = destination.RemoveUnsafeFolderCharacters();
+        
+        var response = await GetSynoAsync<SynoResponse>(TaskApi, "3", "create", $"&uri={safeUri}&destination={safeDestination}");
 
         if (!response.Success)
         {
-            var destinationDetails = destination.Split('/');
+            var destinationDetails = safeDestination.Split('/');
             var folder = $"/{destinationDetails[0]}";
 
             for (var i = 1; i < destinationDetails.Length; i++)
@@ -36,10 +39,10 @@ internal class DownloadStationHttpClient(
                 folder += $"/{destinationDetails[i]}";
             }
 
-            response = await GetSynoAsync<SynoResponse>(TaskApi, "3", "create", $"&uri={uri}&destination={destination.ToUrlProof()}");
+            response = await GetSynoAsync<SynoResponse>(TaskApi, "3", "create", $"&uri={safeUri}&destination={safeDestination}");
 
             if (!response.Success)
-                throw new Exception($"Unable to create task {uri} for destination {destination}");
+                throw new Exception($"Unable to create task {safeUri} for destination {safeDestination}");
         }
         
         return (uri, response.Success);

@@ -2,6 +2,15 @@
 
 public static class StringExtensions
 {
-    public static string ToUrlProof(this string destination)
-        => destination.Replace("/", "%2F").Replace(" ", "%20");
+    public static string ToUrlSafeString(this string destination)
+        => Uri.EscapeDataString(destination);
+    
+    public static string RemoveUnsafeFolderCharacters(this string folderName)
+    {
+        char[] invalidChars = ['\\', ':', '*', '?', '"', '<', '>', '|', '\0'];
+        var safeString = new string(folderName.Where(c => !invalidChars.Contains(c)).ToArray());
+
+        return safeString.Replace("  ", " ");
+    }
+
 }
