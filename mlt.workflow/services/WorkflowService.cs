@@ -7,11 +7,6 @@ using mlt.synology.services;
 
 namespace mlt.workflow.services;
 
-public interface IWorkflowService
-{
-    public Task<bool> DownloadAll();
-}
-
 public class WorkflowService(
     IRssFeedService rssFeedService,
     IRssFeedProcessorService rssFeedProcessorService,

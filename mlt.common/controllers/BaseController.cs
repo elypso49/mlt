@@ -15,6 +15,7 @@ public abstract class BaseController : ControllerBase
         }
         catch (Exception ex)
         {
+            
             return BadRequest(new { message = ex.Message });
         }
     }

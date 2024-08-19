@@ -13,6 +13,7 @@ on:
       - 'mlt.rss/**'
       - 'mlt.synology/**'
       - 'mlt.workflow/**'
+      - '.github/workflows/mlt-api-build-and-deploy.yml'
 
 jobs:
   build:
@@ -31,9 +32,26 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Determine Docker tag
+      - name: Determine Docker tag and webhook
         id: tag
-        run: echo "TAG=$(if [ '${{ github.ref }}' == 'refs/heads/main' ]; then echo 'latest'; else echo 'feature'; fi)" >> $GITHUB_ENV
+        run: |
+          if [[ '${{ github.ref }}' == 'refs/heads/main' ]]; then
+            echo "TAG=latest" >> $GITHUB_ENV
+            if [ -z "${{ secrets.PROD_MLT_API_WEBHOOK }}" ]; then
+              echo "WEBHOOK=''" >> $GITHUB_ENV
+              echo "Warning: PROD_MLT_API_WEBHOOK secret is not set."
+            else
+              echo "WEBHOOK=${{ secrets.PROD_MLT_API_WEBHOOK }}" >> $GITHUB_ENV
+            fi
+          else
+            echo "TAG=feature" >> $GITHUB_ENV
+            if [ -z "${{ secrets.QUALIF_MLT_API_WEBHOOK }}" ]; then
+              echo "WEBHOOK=''" >> $GITHUB_ENV
+              echo "Warning: QUALIF_MLT_API_WEBHOOK secret is not set."
+            else
+              echo "WEBHOOK=${{ secrets.QUALIF_MLT_API_WEBHOOK }}" >> $GITHUB_ENV
+            fi
+          fi
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
@@ -42,10 +60,10 @@ jobs:
           file: mlt.api.Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/mlt.api:${{ env.TAG }}
-
+          
       - name: Trigger Stack Webhook
-        if: ${{ vars.MLT_API_WEBHOOK != '' }}
+        if: ${{ env.WEBHOOK != '' }}
         run: |
-          curl -X POST ${{ vars.MLT_API_WEBHOOK }} \
+          curl -X POST ${{ env.WEBHOOK }} \
           -H "Content-Type: application/json" \
           -d '{"status": "success", "tag": "${{ env.TAG }}"}'
