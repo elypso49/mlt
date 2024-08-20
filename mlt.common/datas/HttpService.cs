@@ -1,13 +1,16 @@
-﻿namespace mlt.common.datas;
+﻿using System.Net.Http.Headers;
+using System.Text;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
+
+namespace mlt.common.datas;
 
 public abstract class HttpService
 {
     private readonly HttpClient _client = new(new HttpClientHandler { ServerCertificateCustomValidationCallback = (_, _, _, _) => true });
-    private readonly JsonSerializerOptions _jsonOptions;
 
-    protected HttpService(JsonSerializerOptions jsonOptions, string baseAddress, string? bearerToken = null)
+    protected HttpService(string baseAddress, string? bearerToken = null)
     {
-        _jsonOptions = jsonOptions;
         _client.BaseAddress = new Uri(baseAddress);
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
     }
@@ -22,7 +25,7 @@ public abstract class HttpService
 
             var json = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<TResponse>(json, _jsonOptions)!;
+            return JsonConvert.DeserializeObject<TResponse>(json)!;
         }
         catch (Exception e)
         {
@@ -49,7 +52,7 @@ public abstract class HttpService
 
             var responseJson = await response.Content.ReadAsStringAsync();
 
-            return string.IsNullOrWhiteSpace(responseJson) ? null : JsonSerializer.Deserialize<TResponse>(responseJson, _jsonOptions)!;
+            return string.IsNullOrWhiteSpace(responseJson) ? null : JsonConvert.DeserializeObject<TResponse>(responseJson)!;
         }
         catch (Exception e)
         {
@@ -89,7 +92,7 @@ public abstract class HttpService
 
             var responseJson = await response.Content.ReadAsStringAsync();
 
-            return string.IsNullOrWhiteSpace(responseJson) ? null : JsonSerializer.Deserialize<TResponse>(responseJson, _jsonOptions)!;
+            return string.IsNullOrWhiteSpace(responseJson) ? null : JsonConvert.DeserializeObject<TResponse>(responseJson)!;
         }
         catch (Exception e)
         {

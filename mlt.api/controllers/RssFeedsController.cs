@@ -1,8 +1,12 @@
-﻿using mlt.dtos.rss.enums;
+﻿using Microsoft.AspNetCore.Mvc;
+using mlt.common.controllers;
+using mlt.common.dtos.rss;
+using mlt.common.dtos.rss.enums;
+using mlt.rss.services;
 
 namespace mlt.api.controllers;
 
-[Route("[controller]"), ApiController]
+[Route("api/[controller]"), ApiController]
 public class RssFeedsController(IRssFeedService service, IRssFeedResultService rssFeedResultService) : CrudController<RssFeed>(service)
 {
     [HttpGet("{id}/results"), ProducesResponseType(typeof(IEnumerable<RssFeed>), StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status404NotFound)]

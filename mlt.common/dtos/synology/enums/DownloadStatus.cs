@@ -1,4 +1,4 @@
-﻿namespace mlt.dtos.synology.enums;
+﻿namespace mlt.common.dtos.synology.enums;
 
 public enum DownloadStatus
 {

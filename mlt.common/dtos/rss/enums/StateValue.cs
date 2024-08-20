@@ -1,4 +1,4 @@
-namespace mlt.dtos.rss.enums;
+namespace mlt.common.dtos.rss.enums;
 
 [Flags]
 public enum StateValue

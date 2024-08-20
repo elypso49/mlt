@@ -1,4 +1,8 @@
-﻿namespace mlt.realdebrid;
+﻿using Microsoft.Extensions.DependencyInjection;
+using mlt.realdebrid.clients;
+using mlt.realdebrid.services;
+
+namespace mlt.realdebrid;
 
 public static class ServiceInjection
 {

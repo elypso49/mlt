@@ -1,7 +1,14 @@
-﻿namespace mlt.realdebrid.clients;
+﻿using AutoMapper;
+using Microsoft.Extensions.Options;
+using mlt.common.datas;
+using mlt.common.dtos.realdebrid;
+using mlt.common.options;
+using mlt.realdebrid.clients.dtos;
 
-internal class RealDebridHttpClient(JsonSerializerOptions jsonSerializerOptions, IOptions<RealDebridOptions> options, IMapper mapper)
-    : HttpService(jsonSerializerOptions, options.Value.BaseUrl, options.Value.ApiToken), IRealDebridHttpClient
+namespace mlt.realdebrid.clients;
+
+internal class RealDebridHttpClient(IOptions<RealDebridOptions> options, IMapper mapper)
+    : HttpService(options.Value.BaseUrl, options.Value.ApiToken), IRealDebridHttpClient
 {
     public async Task<IEnumerable<RealDebridTorrentInfo>> GetDownloads()
         => mapper.Map<IEnumerable<RealDebridTorrentInfo>>(await GetAsync<IEnumerable<DownloadResponse>>("downloads"));

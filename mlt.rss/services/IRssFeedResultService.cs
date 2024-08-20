@@ -1,7 +1,12 @@
-﻿namespace mlt.rss.services;
+﻿using mlt.common.dtos.responses;
+using mlt.common.dtos.rss;
+using mlt.common.dtos.rss.enums;
+using mlt.common.services;
+
+namespace mlt.rss.services;
 
 public interface IRssFeedResultService : ICrudService<RssFeedResult>
 {
-    Task<IEnumerable<RssFeedResult>?> GetByRssFeedId(string rssFeedId);
-    public Task<IEnumerable<RssFeedResult>?> GetByStatus(StateValue stateValue);
+    Task<ResponseDto<IEnumerable<RssFeedResult>>> GetByRssFeedId(string rssFeedId);
+    public Task<ResponseDto<IEnumerable<RssFeedResult>>> GetByStatus(StateValue stateValue);
 }

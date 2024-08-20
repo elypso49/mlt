@@ -1,4 +1,4 @@
-﻿namespace mlt.dtos.synology;
+namespace mlt.common.dtos.synology;
 
 public class SynoFolder
 {

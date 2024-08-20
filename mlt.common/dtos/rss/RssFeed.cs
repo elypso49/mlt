@@ -1,4 +1,4 @@
-﻿namespace mlt.dtos.rss;
+﻿namespace mlt.common.dtos.rss;
 
 public class RssFeed : Identifiable
 {

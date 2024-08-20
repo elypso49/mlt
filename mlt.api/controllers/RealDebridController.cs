@@ -1,6 +1,10 @@
-﻿namespace mlt.api.controllers;
+﻿using Microsoft.AspNetCore.Mvc;
+using mlt.common.controllers;
+using mlt.realdebrid.services;
 
-[Route("[controller]"), ApiController]
+namespace mlt.api.controllers;
+
+[Route("api/[controller]"), ApiController]
 public class RealDebridController(IRealDebridService service) : BaseController
 {
     [HttpGet("/downloads")]
@@ -12,10 +16,10 @@ public class RealDebridController(IRealDebridService service) : BaseController
         => HandleRequest(async () => Ok(await service.GetTorrents()));
 
     [HttpPost("/unrestrict")]
-    public Task<IActionResult> PostUnrestrict(string[] links)
+    public Task<IActionResult> UnrestrictLinks(string[] links)
         => HandleRequest(async () => Ok(await service.UnrestrictLinks(links)));
 
     [HttpPost("/addtorrent")]
-    public Task<IActionResult> AddTorrentFile(string[] links)
+    public Task<IActionResult> AddTorrentFiles(string[] links)
         => HandleRequest(async () => Ok(await service.AddTorrentsInBatchesWithRetry(links)));
 }

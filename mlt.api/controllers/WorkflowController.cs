@@ -1,8 +1,10 @@
-﻿using mlt.workflow.services;
+﻿using Microsoft.AspNetCore.Mvc;
+using mlt.common.controllers;
+using mlt.workflow.services;
 
 namespace mlt.api.controllers;
 
-[Route("[controller]"), ApiController]
+[Route("api/[controller]"), ApiController]
 public class WorkflowController(IWorkflowService service) : BaseController
 {
     [HttpPost]

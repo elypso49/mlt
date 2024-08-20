@@ -1,24 +1,20 @@
-using mlt.workflow;
+using mlt.api.extensions;
 using Newtonsoft.Json.Converters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddJsonFile("appsettings.Development.json", true, true).AddEnvironmentVariables();
+builder.Configuration
+    .AddJsonFile("appsettings.Development.json", true, true)
+    .AddEnvironmentVariables();
 
-builder.Services.AddEndpointsApiExplorer()
+builder.Services
+    .AddEndpointsApiExplorer()
     .AddSwaggerGen()
-    .AddAutoMapper(typeof(MappingRssProfile))
-    .AddAutoMapper(typeof(MappingSynoProfile))
-    .AddAutoMapper(typeof(MappingRdProfile))
+    .AddSwaggerGenNewtonsoftSupport()
     .AddCors(options => { options.AddPolicy("AllowAll", x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()); })
-    .Configure<MongoDbOptions>(builder.Configuration.GetSection(nameof(MongoDbOptions)))
-    .Configure<SynologyOptions>(builder.Configuration.GetSection(nameof(SynologyOptions)))
-    .Configure<RealDebridOptions>(builder.Configuration.GetSection(nameof(RealDebridOptions)))
-    .GetRssDependencyInjection()
-    .GetSynoDependencyInjection()
-    .GetRealDebdridDependencyInjection()
-    .GetWorkflowDependencyInjection()
-    .AddSingleton(new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, PropertyNameCaseInsensitive = true })
+    .AddCustonAutoMapper()
+    .ConfigureCustomOptions(builder.Configuration)
+    .AddCustomDependencies()
     .AddControllers()
     .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()));
 
@@ -33,5 +29,4 @@ app.UseCors("AllowAll")
     });
 
 app.MapControllers();
-
 app.Run();

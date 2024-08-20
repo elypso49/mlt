@@ -12,7 +12,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\mlt.common\mlt.common.csproj"/>
-        <ProjectReference Include="..\mlt.dtos\mlt.dtos.csproj"/>
     </ItemGroup>
 
 </Project>

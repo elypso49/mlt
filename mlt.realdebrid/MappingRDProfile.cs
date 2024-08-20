@@ -1,4 +1,8 @@
-﻿namespace mlt.realdebrid;
+﻿using AutoMapper;
+using mlt.common.dtos.realdebrid;
+using mlt.realdebrid.clients.dtos;
+
+namespace mlt.realdebrid;
 
 public class MappingRdProfile : Profile
 {

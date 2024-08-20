@@ -1,4 +1,13 @@
-﻿namespace mlt.rss.repositories;
+﻿using System.Globalization;
+using System.Xml;
+using System.Xml.Linq;
+using Microsoft.Extensions.Options;
+using mlt.common.dtos.rss;
+using mlt.common.options;
+using mlt.rss.repositories.models;
+using MongoDB.Driver;
+
+namespace mlt.rss.repositories;
 
 internal class RssFeedProcessorRepository : IRssFeedProcessorRepository
 {
@@ -12,13 +21,13 @@ internal class RssFeedProcessorRepository : IRssFeedProcessorRepository
         _rssFeeds = client.GetDatabase(settings.Value.RssLibraryDatabaseName).GetCollection<RssFeedModel>("RssFeeds");
     }
 
-    public async Task<RssSyncResult?> ProcessFeed(string rssFeedId)
+    public async Task<RssSyncResult> ProcessFeed(string rssFeedId)
     {
         var result = new RssSyncResult();
         var rssFeed = _rssFeeds.Find(feed => feed.Id == rssFeedId).FirstOrDefault();
 
         if (rssFeed == null)
-            return null;
+            return null!;
 
         result.RssFeedId = rssFeed.Id!;
         result.Name = rssFeed.Name;

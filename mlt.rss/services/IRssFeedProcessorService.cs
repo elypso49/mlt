@@ -1,6 +1,9 @@
-﻿namespace mlt.rss.services;
+﻿using mlt.common.dtos.responses;
+using mlt.common.dtos.rss;
+
+namespace mlt.rss.services;
 
 public interface IRssFeedProcessorService
 {
-    Task<RssSyncResult?> ProcessFeed(string rssFeedId);
+    Task<ResponseDto<RssSyncResult>> ProcessFeed(string rssFeedId);
 }

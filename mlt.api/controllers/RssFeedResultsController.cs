@@ -1,6 +1,11 @@
-﻿namespace mlt.api.controllers;
+﻿using Microsoft.AspNetCore.Mvc;
+using mlt.common.controllers;
+using mlt.common.dtos.rss;
+using mlt.rss.services;
 
-[Route("[controller]"), ApiController]
+namespace mlt.api.controllers;
+
+[Route("api/[controller]"), ApiController]
 public class RssFeedResultsController(IRssFeedResultService service, IRssFeedProcessorService rssFeedProcessorService) : CrudController<RssFeedResult>(service)
 {
     [HttpPost("{rssFeedId}/fetch")]

@@ -1,18 +1,28 @@
-﻿using SynoTask = mlt.dtos.synology.SynoTask;
+﻿using mlt.common.dtos.responses;
+using mlt.common.dtos.synology;
+using mlt.common.services;
+using mlt.synology.clients;
 
 namespace mlt.synology.services;
 
-internal class DownloadStationService(IDownloadStationHttpClient dsClient) : IDownloadStationService
+internal class DownloadStationService(IDownloadStationHttpClient dsClient) : BaseService, IDownloadStationService
 {
-    public async Task<IEnumerable<SynoTask>> GetTasks()
-        => await dsClient.GetTasks();
+    public Task<ResponseDto<IEnumerable<SynoTask>>> GetTasks()
+        => HandleDataRetrievement(async () => await dsClient.GetTasks());
 
-    public async Task<List<(string uri, bool isSuccess)>> CreateTask(IEnumerable<string> uri, string? destination = "Movies")
+    public async Task<ResponseDto<List<SynoCreateTaskResponse>>?> CreateTask(IEnumerable<string> uri, string destination = "Movies")
     {
-        var result = new List<(string uri, bool isSuccess)>();
+        var result = new ResponseDto<List<SynoCreateTaskResponse>> { Data = [] };
 
-        foreach (var uriItem in uri)
-            result.Add(await dsClient.CreateTask(uriItem, destination!));
+        try
+        {
+            foreach (var uriItem in uri)
+                result.Data.Add(await dsClient.CreateTask(uriItem, destination!));
+        }
+        catch (Exception e)
+        {
+            return ManageError<List<SynoCreateTaskResponse>>(e);
+        }
 
         return result;
     }

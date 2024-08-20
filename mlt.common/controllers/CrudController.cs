@@ -1,10 +1,13 @@
-﻿namespace mlt.common.controllers;
+﻿using Microsoft.AspNetCore.Mvc;
+using mlt.common.services;
+
+namespace mlt.common.controllers;
 
 public abstract class CrudController<T>(ICrudService<T> service) : BaseController
     where T : Identifiable
 {
     [HttpGet]
-    public virtual Task<IActionResult> GetAll()
+    public Task<IActionResult> GetAll()
         => HandleRequest(async () => Ok(await service.GetAll()));
 
     [HttpGet("{id}")]
@@ -24,5 +27,5 @@ public abstract class CrudController<T>(ICrudService<T> service) : BaseControlle
         => HandleRequest(async () => await CheckIfExists(id) is not null ? Ok(await service.Delete(id)) : NotFound());
 
     private async Task<T?> CheckIfExists(string id)
-        => await service.GetById(id);
+        => (await service.GetById(id)).Data;
 }

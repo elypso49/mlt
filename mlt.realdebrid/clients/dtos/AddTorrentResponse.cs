@@ -2,6 +2,6 @@
 
 internal class AddTorrentResponse
 {
-    public string Id { get; set; }
-    public string Uri { get; set; }
+    public string Id { get; set; } = null!;
+    public string Uri { get; set; } = null!;
 }

@@ -1,4 +1,6 @@
-﻿namespace mlt.rss.repositories.models;
+﻿using mlt.common;
+
+namespace mlt.rss.repositories.models;
 
 internal class RssFeedModel : BsonIdentifiable
 {

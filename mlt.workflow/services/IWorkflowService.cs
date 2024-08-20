@@ -1,6 +1,9 @@
-﻿namespace mlt.workflow.services;
+﻿using mlt.common.dtos.responses;
+using mlt.common.dtos.workflows;
+
+namespace mlt.workflow.services;
 
 public interface IWorkflowService
 {
-    public Task<bool> DownloadAll();
+    public Task<ResponseDto<WorkflowResponse>> DownloadAll();
 }

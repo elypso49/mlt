@@ -1,20 +1,24 @@
-﻿namespace mlt.common.services;
+using mlt.common.datas;
+using mlt.common.datas.dtos;
+using mlt.common.dtos.responses;
 
-public abstract class CrudService<T>(ICrudRepository<T> repository) : ICrudService<T>
+namespace mlt.common.services;
+
+public abstract class CrudService<T>(ICrudRepository<T> repository) : BaseService, ICrudService<T>
     where T : class
 {
-    public Task<IEnumerable<T>> GetAll()
-        => repository.GetAll();
+    public Task<ResponseDto<IEnumerable<T>>> GetAll()
+        => HandleDataRetrievement(async () => await repository.GetAll());
 
-    public Task<T?> GetById(string id)
-        => repository.GetById(id);
+    public Task<ResponseDto<T>> GetById(string id)
+        => HandleDataRetrievement(async () => await repository.GetById(id));
 
-    public Task<T> Add(T result)
-        => repository.Add(result);
+    public Task<ResponseDto<T>> Add(T result)
+        => HandleDataRetrievement(async () => await repository.Add(result));
 
-    public Task<UpdateResponse> Update(string id, T result)
-        => repository.Update(id, result);
+    public Task<ResponseDto<UpdateResponse>> Update(string id, T result)
+        => HandleDataRetrievement(async () => await repository.Update(id, result));
 
-    public Task<DeleteResponse> Delete(string id)
-        => repository.Delete(id);
+    public Task<ResponseDto<DeleteResponse>> Delete(string id)
+        => HandleDataRetrievement(async () => await repository.Delete(id));
 }

@@ -1,4 +1,7 @@
-﻿namespace mlt.common;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace mlt.common;
 
 public abstract class BsonIdentifiable
 {

@@ -1,9 +1,14 @@
-﻿using mlt.common.extensions;
+﻿using AutoMapper;
+using Microsoft.Extensions.Options;
+using mlt.common.dtos.synology;
+using mlt.common.extensions;
+using mlt.common.options;
+using mlt.synology.clients.dtos;
 
 namespace mlt.synology.clients;
 
-internal class FileStationHttpClient(JsonSerializerOptions jsonSerializerOptions, IOptions<SynologyOptions> options, IMapper mapper)
-    : SynologyHttpClient(jsonSerializerOptions, options.Value, "webapi/entry.cgi"), IFileStationHttpClient
+internal class FileStationHttpClient(IOptions<SynologyOptions> options, IMapper mapper)
+    : SynologyHttpClient(options.Value, "webapi/entry.cgi"), IFileStationHttpClient
 {
     private const string ListApi = "SYNO.FileStation.List";
     private const string CreateFolderApi = "SYNO.FileStation.CreateFolder";

@@ -1,4 +1,10 @@
-﻿namespace mlt.common.datas;
+﻿using AutoMapper;
+using Microsoft.Extensions.Options;
+using mlt.common.datas.dtos;
+using mlt.common.options;
+using MongoDB.Driver;
+
+namespace mlt.common.datas;
 
 public abstract class CrudRepository<TEntity, TModel> : ICrudRepository<TEntity>
     where TEntity : class
@@ -17,7 +23,7 @@ public abstract class CrudRepository<TEntity, TModel> : ICrudRepository<TEntity>
     public async Task<IEnumerable<TEntity>> GetAll()
         => Mapper.Map<IEnumerable<TEntity>>((await Collection.FindAsync(feed => true)).ToList());
 
-    public async Task<TEntity?> GetById(string id)
+    public async Task<TEntity> GetById(string id)
         => Mapper.Map<TEntity>((await Collection.FindAsync(x => x.Id == id)).ToList().FirstOrDefault());
 
     public async Task<TEntity> Add(TEntity entity)

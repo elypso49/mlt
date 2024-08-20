@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+
 namespace mlt.common.controllers;
 
 public abstract class BaseController : ControllerBase
