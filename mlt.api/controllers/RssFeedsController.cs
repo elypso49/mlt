@@ -6,20 +6,14 @@ namespace mlt.api.controllers;
 public class RssFeedsController(IRssFeedService service, IRssFeedResultService rssFeedResultService) : CrudController<RssFeed>(service)
 {
     [HttpGet("{id}/results"), ProducesResponseType(typeof(IEnumerable<RssFeed>), StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult> GetRssFeedResultByRssFeedId(string id)
-        => HandleRequest(async () =>
-                         {
-                             var result = await rssFeedResultService.GetByRssFeedId(id);
+    public Task<IActionResult> GetResultsByRssFeedId(string id)
+        => HandleRequest(async () => await rssFeedResultService.GetByRssFeedId(id) is { } rssFeedResult
+            ? Ok(rssFeedResult)
+            : NotFound());
 
-                             return (result != null, Ok(result));
-                         });
-
-    [HttpGet("bystatus"), ProducesResponseType(typeof(IEnumerable<RssFeed>), StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult> GetRssFeedResultByRssFeedId(StateValue stateValue)
-        => HandleRequest(async () =>
-                         {
-                             var result = await rssFeedResultService.GetByStatus(stateValue);
-
-                             return (result != null, Ok(result));
-                         });
+    [HttpGet("status/{stateValue}"), ProducesResponseType(typeof(IEnumerable<RssFeed>), StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> GetFeedsByState(StateValue stateValue)
+        => HandleRequest(async () => await rssFeedResultService.GetByStatus(stateValue) is { } rssFeedResult
+            ? Ok(rssFeedResult)
+            : NotFound());
 }

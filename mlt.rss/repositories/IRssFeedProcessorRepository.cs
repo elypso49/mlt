@@ -2,5 +2,5 @@
 
 internal interface IRssFeedProcessorRepository
 {
-    Task ProcessFeed(string rssFeedId);
+    Task<RssSyncResult?> ProcessFeed(string rssFeedId);
 }

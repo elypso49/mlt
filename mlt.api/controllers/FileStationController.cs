@@ -4,11 +4,6 @@
 public class FileStationController(IFileStationService service) : BaseController
 {
     [HttpGet]
-    public Task<ActionResult> GetTasks()
-        => HandleRequest(async () =>
-                         {
-                             var result = await service.GetFoldersWithSubs();
-
-                             return (result != null, Ok(result));
-                         });
+    public Task<IActionResult> GetTasks()
+        => HandleRequest(async () => Ok(await service.GetFoldersWithSubs()));
 }

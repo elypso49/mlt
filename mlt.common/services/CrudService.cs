@@ -6,7 +6,7 @@ public abstract class CrudService<T>(ICrudRepository<T> repository) : ICrudServi
     public Task<IEnumerable<T>> GetAll()
         => repository.GetAll();
 
-    public Task<T> GetById(string id)
+    public Task<T?> GetById(string id)
         => repository.GetById(id);
 
     public Task<T> Add(T result)

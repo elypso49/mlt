@@ -6,11 +6,6 @@ namespace mlt.api.controllers;
 public class WorkflowController(IWorkflowService service) : BaseController
 {
     [HttpPost]
-    public Task<ActionResult> DownloadAll()
-        => HandleRequest(async () =>
-                         {
-                             var result = await service.DownloadAll();
-
-                             return (result, Ok(result));
-                         });
+    public Task<IActionResult> DownloadAll()
+        => HandleRequest(async () => Ok(await service.DownloadAll()));
 }

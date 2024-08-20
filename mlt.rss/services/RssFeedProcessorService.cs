@@ -2,6 +2,6 @@
 
 internal class RssFeedProcessorService(IRssFeedProcessorRepository rssFeedProcessorRepository) : IRssFeedProcessorService
 {
-    public Task ProcessFeed(string rssFeedId)
+    public Task<RssSyncResult?> ProcessFeed(string rssFeedId)
         => rssFeedProcessorRepository.ProcessFeed(rssFeedId);
 }

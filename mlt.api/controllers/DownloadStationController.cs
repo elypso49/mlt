@@ -4,20 +4,10 @@
 public class DownloadStationController(IDownloadStationService service) : BaseController
 {
     [HttpGet]
-    public Task<ActionResult> GetTasks()
-        => HandleRequest(async () =>
-                         {
-                             var result = await service.GetTasks();
-
-                             return (result != null, Ok(result));
-                         });
+    public Task<IActionResult> GetTasks()
+        => HandleRequest(async () => Ok(await service.GetTasks()));
 
     [HttpGet("CreateTask")]
-    public Task<ActionResult> CreateTask(string uri, string? destination)
-        => HandleRequest(async () =>
-                         {
-                             await service.CreateTask(uri.Split(',', StringSplitOptions.RemoveEmptyEntries), destination);
-
-                             return (true, Ok());
-                         });
+    public Task<IActionResult> CreateTask(string uri, string? destination)
+        => HandleRequest(async () => Ok(await service.CreateTask(uri.Split(',', StringSplitOptions.RemoveEmptyEntries), destination)));
 }

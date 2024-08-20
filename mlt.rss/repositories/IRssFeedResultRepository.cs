@@ -2,6 +2,6 @@
 
 internal interface IRssFeedResultRepository : ICrudRepository<RssFeedResult>
 {
-    Task<IEnumerable<RssFeedResult>> GetByRssFeedId(string rssFeedId);
-    Task<IEnumerable<RssFeedResult>> GetByStatus(StateValue stateValue);
+    Task<IEnumerable<RssFeedResult>?> GetByRssFeedId(string rssFeedId);
+    Task<IEnumerable<RssFeedResult>?> GetByStatus(StateValue stateValue);
 }

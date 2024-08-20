@@ -2,5 +2,5 @@
 
 public interface IRssFeedProcessorService
 {
-    Task ProcessFeed(string rssFeedId);
+    Task<RssSyncResult?> ProcessFeed(string rssFeedId);
 }

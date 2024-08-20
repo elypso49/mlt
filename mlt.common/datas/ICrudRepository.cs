@@ -4,7 +4,7 @@ public interface ICrudRepository<T>
     where T : class
 {
     Task<IEnumerable<T>> GetAll();
-    Task<T> GetById(string id);
+    Task<T?> GetById(string id);
 
     Task<T> Add(T result);
 

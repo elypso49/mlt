@@ -5,7 +5,7 @@ public interface ICrudService<T>
 {
     public Task<IEnumerable<T>> GetAll();
 
-    public Task<T> GetById(string id);
+    public Task<T?> GetById(string id);
 
     public Task<T> Add(T feed);
 
