@@ -24,7 +24,7 @@ public class WorkflowService(
         try
         {
             var rssFeeds = HandleData(await rssFeedService.GetAll(), response).ToList();
-
+            
             await Task.WhenAll(rssFeeds.Select(rssFeed => rssFeedProcessorService.ProcessFeed(rssFeed.Id!)));
 
             var rssFeedResults = HandleData(await rssFeedResultService.GetAll(), response).Where(x => x.State != StateValue.Downloaded).ToList();
