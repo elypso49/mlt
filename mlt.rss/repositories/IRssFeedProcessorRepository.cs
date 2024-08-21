@@ -1,6 +1,8 @@
-﻿namespace mlt.rss.repositories;
+﻿using mlt.common.dtos.rss;
+
+namespace mlt.rss.repositories;
 
 internal interface IRssFeedProcessorRepository
 {
-    Task ProcessFeed(string rssFeedId);
+    Task<RssSyncResult> ProcessFeed(string rssFeedId);
 }

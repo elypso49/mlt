@@ -1,17 +1,14 @@
+using Microsoft.AspNetCore.Mvc;
+
 namespace mlt.common.controllers;
 
 public abstract class BaseController : ControllerBase
 {
-    protected async Task<ActionResult> HandleRequest(Func<Task<(bool Success, object Result)>> process)
+    protected async Task<IActionResult> HandleRequest(Func<Task<IActionResult>> process)
     {
         try
         {
-            var (success, result) = await process();
-
-            if (success)
-                return result is NoContentResult ? NoContent() : (ActionResult)result;
-
-            return NotFound();
+            return await process();
         }
         catch (Exception ex)
         {

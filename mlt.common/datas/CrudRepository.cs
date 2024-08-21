@@ -1,4 +1,10 @@
-﻿namespace mlt.common.datas;
+﻿using AutoMapper;
+using Microsoft.Extensions.Options;
+using mlt.common.datas.dtos;
+using mlt.common.options;
+using MongoDB.Driver;
+
+namespace mlt.common.datas;
 
 public abstract class CrudRepository<TEntity, TModel> : ICrudRepository<TEntity>
     where TEntity : class

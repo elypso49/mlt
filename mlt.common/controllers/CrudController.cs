@@ -1,53 +1,31 @@
-﻿namespace mlt.common.controllers;
+﻿using Microsoft.AspNetCore.Mvc;
+using mlt.common.services;
+
+namespace mlt.common.controllers;
 
 public abstract class CrudController<T>(ICrudService<T> service) : BaseController
     where T : Identifiable
 {
     [HttpGet]
-    public Task<ActionResult> GetAll()
-        => HandleRequest(async () => (true, Ok(await service.GetAll())));
+    public Task<IActionResult> GetAll()
+        => HandleRequest(async () => Ok(await service.GetAll()));
 
     [HttpGet("{id}")]
-    public Task<ActionResult> GetById(string id)
-        => HandleRequest(async () =>
-                         {
-                             var result = await service.GetById(id);
-
-                             return (result != null, Ok(result));
-                         });
+    public Task<IActionResult> GetById(string id)
+        => HandleRequest(async () => await CheckIfExists(id) is { } found ? Ok(found) : NotFound());
 
     [HttpPost]
-    public async Task<ActionResult> PostRssFeed(T feed)
-    {
-        var created = await service.Add(feed);
-
-        return CreatedAtAction(nameof(PostRssFeed), created);
-    }
+    public Task<IActionResult> PostRssFeed(T feed)
+        => HandleRequest(async () => CreatedAtAction(nameof(PostRssFeed), await service.Add(feed)));
 
     [HttpPut("{id}")]
-    public Task<ActionResult> Put(string id, T result)
-        => HandleRequest(async () =>
-                         {
-                             if (!await CheckIfExists(id))
-                                 return (false, null)!;
-
-                             await service.Update(id, result);
-
-                             return (true, NoContent());
-                         });
-
-    private async Task<bool> CheckIfExists(string id)
-        => await service.GetById(id) != null;
+    public Task<IActionResult> Put(string id, T result)
+        => HandleRequest(async () => await CheckIfExists(id) is not null ? Ok(await service.Update(id, result)) : NotFound());
 
     [HttpDelete("{id}")]
-    public Task<ActionResult> Delete(string id)
-        => HandleRequest(async () =>
-                         {
-                             if (!await CheckIfExists(id))
-                                 return (false, null!);
+    public Task<IActionResult> Delete(string id)
+        => HandleRequest(async () => await CheckIfExists(id) is not null ? Ok(await service.Delete(id)) : NotFound());
 
-                             await service.Delete(id);
-
-                             return (true, NoContent());
-                         });
+    private async Task<T?> CheckIfExists(string id)
+        => (await service.GetById(id)).Data;
 }

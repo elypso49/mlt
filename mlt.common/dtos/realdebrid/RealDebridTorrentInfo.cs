@@ -1,4 +1,4 @@
-﻿namespace mlt.dtos.realdebrid;
+﻿namespace mlt.common.dtos.realdebrid;
 
 public class RealDebridTorrentInfo
 {

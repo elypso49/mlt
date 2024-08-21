@@ -1,7 +1,12 @@
-﻿namespace mlt.rss.services;
+﻿using mlt.common.dtos.responses;
+using mlt.common.dtos.rss;
+using mlt.common.services;
+using mlt.rss.repositories;
 
-internal class RssFeedProcessorService(IRssFeedProcessorRepository rssFeedProcessorRepository) : IRssFeedProcessorService
+namespace mlt.rss.services;
+
+internal class RssFeedProcessorService(IRssFeedProcessorRepository rssFeedProcessorRepository) : BaseService, IRssFeedProcessorService
 {
-    public Task ProcessFeed(string rssFeedId)
-        => rssFeedProcessorRepository.ProcessFeed(rssFeedId);
+    public Task<ResponseDto<RssSyncResult>> ProcessFeed(string rssFeedId)
+        => HandleDataRetrievement(async () => await rssFeedProcessorRepository.ProcessFeed(rssFeedId));
 }

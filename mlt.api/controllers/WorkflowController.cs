@@ -1,16 +1,13 @@
-﻿using mlt.workflow.services;
+﻿using Microsoft.AspNetCore.Mvc;
+using mlt.common.controllers;
+using mlt.workflow.services;
 
 namespace mlt.api.controllers;
 
-[Route("[controller]"), ApiController]
+[Route("api/[controller]"), ApiController]
 public class WorkflowController(IWorkflowService service) : BaseController
 {
     [HttpPost]
-    public Task<ActionResult> DownloadAll()
-        => HandleRequest(async () =>
-                         {
-                             var result = await service.DownloadAll();
-
-                             return (result, Ok(result));
-                         });
+    public Task<IActionResult> DownloadAll()
+        => HandleRequest(async () => Ok(await service.DownloadAll()));
 }

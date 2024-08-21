@@ -1,41 +1,25 @@
-﻿namespace mlt.api.controllers;
+﻿using Microsoft.AspNetCore.Mvc;
+using mlt.common.controllers;
+using mlt.realdebrid.services;
 
-[Route("[controller]"), ApiController]
+namespace mlt.api.controllers;
+
+[Route("api/[controller]"), ApiController]
 public class RealDebridController(IRealDebridService service) : BaseController
 {
     [HttpGet("/downloads")]
-    public Task<ActionResult> GetDownloads()
-        => HandleRequest(async () =>
-                         {
-                             var result = await service.GetDownloads();
-
-                             return (result != null, Ok(result));
-                         });
+    public Task<IActionResult> GetDownloads()
+        => HandleRequest(async () => Ok(await service.GetDownloads()));
 
     [HttpGet("/torrents")]
-    public Task<ActionResult> GetTorrents()
-        => HandleRequest(async () =>
-                         {
-                             var result = await service.GetTorrents();
-
-                             return (result != null, Ok(result));
-                         });
+    public Task<IActionResult> GetTorrents()
+        => HandleRequest(async () => Ok(await service.GetTorrents()));
 
     [HttpPost("/unrestrict")]
-    public Task<ActionResult> PostUnrestrict(string[] links)
-        => HandleRequest(async () =>
-                         {
-                             var result = await service.UnrestrictLinks(links);
-
-                             return (result != null, Ok(result));
-                         });
+    public Task<IActionResult> UnrestrictLinks(string[] links)
+        => HandleRequest(async () => Ok(await service.UnrestrictLinks(links)));
 
     [HttpPost("/addtorrent")]
-    public Task<ActionResult> AddTorrentFile(string[] links)
-        => HandleRequest(async () =>
-                         {
-                             var result = await service.AddTorrentsInBatchesWithRetry(links);
-
-                             return (result != null, Ok(result));
-                         });
+    public Task<IActionResult> AddTorrentFiles(string[] links)
+        => HandleRequest(async () => Ok(await service.AddTorrentsInBatchesWithRetry(links)));
 }

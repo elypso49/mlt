@@ -1,9 +1,11 @@
-﻿using SynoTask = mlt.dtos.synology.SynoTask;
+﻿using mlt.common.dtos.responses;
+using mlt.common.dtos.synology;
+using SynoTask = mlt.common.dtos.synology.SynoTask;
 
 namespace mlt.synology.services;
 
 public interface IDownloadStationService
 {
-    public Task<IEnumerable<SynoTask>> GetTasks();
-    public Task<List<(string uri, bool isSuccess)>> CreateTask(IEnumerable<string> uri, string? destination = "Movies");
+    public Task<ResponseDto<IEnumerable<SynoTask>>> GetTasks();
+    public Task<ResponseDto<List<SynoCreateTaskResponse>>?> CreateTask(IEnumerable<string> uri, string destination = "Movies");
 }

@@ -1,4 +1,6 @@
-﻿namespace mlt.common.datas;
+﻿using mlt.common.datas.dtos;
+
+namespace mlt.common.datas;
 
 public interface ICrudRepository<T>
     where T : class

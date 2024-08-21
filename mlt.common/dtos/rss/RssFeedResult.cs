@@ -1,4 +1,6 @@
-﻿namespace mlt.dtos.rss;
+﻿using mlt.common.dtos.rss.enums;
+
+namespace mlt.common.dtos.rss;
 
 public class RssFeedResult : Identifiable
 {

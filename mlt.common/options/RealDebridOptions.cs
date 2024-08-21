@@ -1,4 +1,6 @@
-﻿namespace mlt.common.options;
+﻿using Microsoft.Extensions.Options;
+
+namespace mlt.common.options;
 
 public class RealDebridOptions : IOptions<RealDebridOptions>
 {

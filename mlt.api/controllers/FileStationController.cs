@@ -1,14 +1,13 @@
-﻿namespace mlt.api.controllers;
+﻿using Microsoft.AspNetCore.Mvc;
+using mlt.common.controllers;
+using mlt.synology.services;
 
-[Route("[controller]"), ApiController]
+namespace mlt.api.controllers;
+
+[Route("api/[controller]"), ApiController]
 public class FileStationController(IFileStationService service) : BaseController
 {
     [HttpGet]
-    public Task<ActionResult> GetTasks()
-        => HandleRequest(async () =>
-                         {
-                             var result = await service.GetFoldersWithSubs();
-
-                             return (result != null, Ok(result));
-                         });
+    public Task<IActionResult> Get()
+        => HandleRequest(async () => Ok(await service.GetFoldersWithSubs()));
 }

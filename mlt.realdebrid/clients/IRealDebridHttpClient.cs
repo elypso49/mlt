@@ -1,4 +1,6 @@
-﻿namespace mlt.realdebrid.clients;
+﻿using mlt.common.dtos.realdebrid;
+
+namespace mlt.realdebrid.clients;
 
 internal interface IRealDebridHttpClient
 {

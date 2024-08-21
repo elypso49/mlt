@@ -1,4 +1,8 @@
-﻿namespace mlt.rss.repositories;
+﻿using mlt.common.datas;
+using mlt.common.dtos.rss;
+using mlt.common.dtos.rss.enums;
+
+namespace mlt.rss.repositories;
 
 internal interface IRssFeedResultRepository : ICrudRepository<RssFeedResult>
 {

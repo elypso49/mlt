@@ -1,7 +1,10 @@
-﻿namespace mlt.synology.clients;
+﻿using mlt.common.datas;
+using mlt.common.options;
 
-internal abstract class SynologyHttpClient(JsonSerializerOptions jsonSerializerOptions, SynologyOptions synologyOptions, string entrypoint)
-    : HttpService(jsonSerializerOptions, synologyOptions.BaseUrl)
+namespace mlt.synology.clients;
+
+internal abstract class SynologyHttpClient(SynologyOptions synologyOptions, string entrypoint)
+    : HttpService(synologyOptions.BaseUrl)
 {
     private string ParamAuth => $"?_sid={synologyOptions.Sid}&SynoToken={synologyOptions.Token}";
 

@@ -1,27 +1,36 @@
 ﻿using System.Text.RegularExpressions;
+using Microsoft.Extensions.Options;
+using mlt.common.dtos.realdebrid;
+using mlt.common.dtos.responses;
+using mlt.common.options;
+using mlt.common.services;
+using mlt.realdebrid.clients;
 
 namespace mlt.realdebrid.services;
 
-internal partial class RealDebridService(IRealDebridHttpClient rdClient, IOptions<RealDebridOptions> options) : IRealDebridService
+internal partial class RealDebridService(IRealDebridHttpClient rdClient, IOptions<RealDebridOptions> options) : BaseService, IRealDebridService
 {
-    public Task<IEnumerable<RealDebridTorrentInfo>> GetDownloads()
-        => rdClient.GetDownloads();
+    public Task<ResponseDto<IEnumerable<RealDebridTorrentInfo>>> GetDownloads()
+        => HandleDataRetrievement(async () => await rdClient.GetDownloads());
 
-    public Task<IEnumerable<RealDebridTorrentInfo>> GetTorrents()
-        => rdClient.GetTorrents();
+    public Task<ResponseDto<IEnumerable<RealDebridTorrentInfo>>> GetTorrents()
+        => HandleDataRetrievement(async () => await rdClient.GetTorrents());
 
-    public async Task<IEnumerable<RealDebridTorrentInfo>> UnrestrictLinks(IEnumerable<string> links)
-        => await Task.WhenAll(links.Select(rdClient.UnrestrictLink).ToList());
+    public Task<ResponseDto<IEnumerable<RealDebridTorrentInfo>>> UnrestrictLinks(IEnumerable<string> links)
+        => HandleDataRetrievement<IEnumerable<RealDebridTorrentInfo>>(async () => await Task.WhenAll(links.Select(rdClient.UnrestrictLink).ToList()));
 
-    public async Task<IEnumerable<(string torrentId, string torrentSource)>> AddTorrentsInBatchesWithRetry(
-        IEnumerable<string> torrentLinks,
+    public async Task<ResponseDto<List<AddTorrentResponse>>> AddTorrentsInBatchesWithRetry(
+        IEnumerable<string>? torrentLinks,
         int batchSize = 2,
         int initialDelayMilliseconds = 1000,
         int maxRetries = 3,
         int maxConcurent = 30)
     {
-        var torrentLinksLst = torrentLinks.ToList();
-        var results = new List<(string torrentId, string torrentSource)>();
+        var results = new ResponseDto<List<AddTorrentResponse>> { Data = [] };
+        var torrentLinksLst = torrentLinks?.ToList();
+
+        if (torrentLinksLst is null || torrentLinksLst.Any() == false)
+            return results;
 
         for (var i = 0; i < Math.Min(torrentLinksLst.Count, maxConcurent); i += batchSize)
         {
@@ -34,7 +43,7 @@ internal partial class RealDebridService(IRealDebridHttpClient rdClient, IOption
                 try
                 {
                     var batchResults = await AddTorrents(batch);
-                    results.AddRange(batchResults);
+                    results.Data.AddRange(batchResults.ToList());
                     success = true;
                 }
                 catch (HttpRequestException ex) when ((int)ex.StatusCode! == 429)
@@ -55,10 +64,10 @@ internal partial class RealDebridService(IRealDebridHttpClient rdClient, IOption
         return results;
     }
 
-    public Task<RealDebridTorrentInfo> GetTorrentInfo(string torrentId)
-        => rdClient.GetTorrentInfo(torrentId);
+    public Task<ResponseDto<RealDebridTorrentInfo>> GetTorrentInfo(string torrentId)
+        => HandleDataRetrievement(async () => await rdClient.GetTorrentInfo(torrentId));
 
-    private async Task<List<(string torrentId, string torrentSource)>> AddTorrents(IEnumerable<string> torrents)
+    private async Task<List<AddTorrentResponse>> AddTorrents(IEnumerable<string> torrents)
     {
         var addTorrentTasks = torrents.Select(AddTorrent);
         var results = await Task.WhenAll(addTorrentTasks);
@@ -66,7 +75,7 @@ internal partial class RealDebridService(IRealDebridHttpClient rdClient, IOption
         return results.ToList();
     }
 
-    private async Task<(string torrentId, string torrentSource)> AddTorrent(string torrentSource)
+    private async Task<AddTorrentResponse> AddTorrent(string torrentSource)
     {
         var torrentId = MagnetRegex().IsMatch(torrentSource) ? await rdClient.AddMagnet(torrentSource) : await rdClient.AddTorrent(torrentSource);
         var torrent = await rdClient.GetTorrentInfo(torrentId);
@@ -76,7 +85,7 @@ internal partial class RealDebridService(IRealDebridHttpClient rdClient, IOption
         if (!string.IsNullOrWhiteSpace(selectedFiles))
             await rdClient.SelectTorrentFiles(torrentId, selectedFiles);
 
-        return (torrentId, torrentSource);
+        return new() { TorrentId = torrentId, TorrentSource = torrentSource };
     }
 
     [GeneratedRegex(@"^magnet:\?xt=urn:.*$")]

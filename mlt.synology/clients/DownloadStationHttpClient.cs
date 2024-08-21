@@ -1,12 +1,16 @@
-﻿using mlt.common.extensions;
+﻿using AutoMapper;
+using Microsoft.Extensions.Options;
+using mlt.common.dtos.synology;
+using mlt.common.extensions;
+using mlt.common.options;
+using mlt.synology.clients.dtos;
 
 namespace mlt.synology.clients;
 
 internal class DownloadStationHttpClient(
-    JsonSerializerOptions jsonSerializerOptions,
     IOptions<SynologyOptions> synologyOptions,
     IMapper mapper,
-    IFileStationHttpClient fileStationHttpClient) : SynologyHttpClient(jsonSerializerOptions, synologyOptions.Value, "webapi/DownloadStation/task.cgi"), IDownloadStationHttpClient
+    IFileStationHttpClient fileStationHttpClient) : SynologyHttpClient(synologyOptions.Value, "webapi/DownloadStation/task.cgi"), IDownloadStationHttpClient
 {
     private const string TaskApi = "SYNO.DownloadStation.Task";
 
@@ -19,7 +23,7 @@ internal class DownloadStationHttpClient(
         return synoTasks;
     }
 
-    public async Task<(string uri, bool isSuccess)> CreateTask(string uri, string destination)
+    public async Task<SynoCreateTaskResponse> CreateTask(string uri, string destination)
     {
         var safeUri = uri.ToUrlSafeString();
         var safeDestination = destination.RemoveUnsafeFolderCharacters();
@@ -44,6 +48,6 @@ internal class DownloadStationHttpClient(
                 throw new Exception($"Unable to create task {safeUri} for destination {safeDestination}");
         }
 
-        return (uri, response.Success);
+        return new() { Uri = uri, IsSuccess = response.Success };
     }
 }
