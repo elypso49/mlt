@@ -12,4 +12,13 @@ public static class StringExtensions
 
         return safeString.Replace("  ", " ");
     }
+    
+    
+    public static string CleanTitle(this string title)
+    {
+        char[] invalidChars = ['-', ' '];
+        var safeString = new string(title.Where(c => !invalidChars.Contains(c)).ToArray());
+
+        return safeString.Replace("  ", " ").ToUpperInvariant();
+    }
 }
