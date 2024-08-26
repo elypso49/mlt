@@ -4,6 +4,7 @@ using mlt.common.dtos.responses;
 using mlt.common.dtos.rss;
 using mlt.common.dtos.rss.enums;
 using mlt.common.dtos.workflows;
+using mlt.common.extensions;
 using mlt.common.services;
 using mlt.realdebrid.services;
 using mlt.rss.services;
@@ -94,11 +95,11 @@ public class WorkflowService(
     {
         var fileNameRegex = !string.IsNullOrWhiteSpace(rssFlux?.FileNameRegex) ? rssFlux.FileNameRegex : @"S(\d{2})E(\d{2})";
 
-        var seasonFolder = Regex.Match(rssFeedResult.Title!, fileNameRegex) is { Success: true } match ? $"/Season {int.Parse(match.Groups[1].Value):00}" : string.Empty;
+        var seasonFolder = Regex.Match(rssFeedResult.Title!.CleanTitle(), fileNameRegex) is { Success: true } match ? $"/Season {int.Parse(match.Groups[1].Value):00}" : string.Empty;
 
-        seasonFolder = string.IsNullOrWhiteSpace(seasonFolder) && Regex.Match(rssFeedResult.Title!, @"Season (\d+)") is { Success: true } matchSeason
+        seasonFolder = Regex.Match(rssFeedResult.Title!.CleanTitle(), @"SEASON(\d+)") is { Success: true } matchSeason
             ? $"/Season {int.Parse(matchSeason.Groups[1].Value):00}"
-            : string.Empty;
+            : seasonFolder;
 
         seasonFolder = string.IsNullOrWhiteSpace(seasonFolder) && rssFlux?.ForceFirstSeasonFolder == true ? "/Season 01" : seasonFolder;
 
