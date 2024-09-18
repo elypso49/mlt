@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
+using mlt.common.helpers;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -15,52 +16,37 @@ public abstract class HttpService
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
     }
 
-    protected async Task<TResponse> GetAsync<TResponse>(string endpoint)
-    {
-        try
-        {
-            var response = await _client.GetAsync(endpoint);
+    protected async Task<TResponse?> GetAsync<TResponse>(string endpoint)
+        where TResponse : class
+        => await HttpRequestHelper.DoActionWithRetry(async () =>
+                                                 {
+                                                     var response = await _client.GetAsync(endpoint);
 
-            response.EnsureSuccessStatusCode();
+                                                     response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsStringAsync();
+                                                     var json = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<TResponse>(json)!;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-
-            throw;
-        }
-    }
+                                                     return JsonConvert.DeserializeObject<TResponse>(json)!;
+                                                 });
 
     protected async Task<TResponse?> PutAsync<TResponse>(string endpoint, string fileUrl)
         where TResponse : class
-    {
-        try
-        {
-            using var downloadResponse = await _client.GetAsync(fileUrl, HttpCompletionOption.ResponseHeadersRead);
-            downloadResponse.EnsureSuccessStatusCode();
+        => await HttpRequestHelper.DoActionWithRetry(async () =>
+                                                 {
+                                                     using var downloadResponse = await _client.GetAsync(fileUrl, HttpCompletionOption.ResponseHeadersRead);
+                                                     downloadResponse.EnsureSuccessStatusCode();
 
-            await using var contentStream = await downloadResponse.Content.ReadAsStreamAsync();
-            using var requestContent = new StreamContent(contentStream);
-            requestContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                                                     await using var contentStream = await downloadResponse.Content.ReadAsStreamAsync();
+                                                     using var requestContent = new StreamContent(contentStream);
+                                                     requestContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 
-            using var response = await _client.PutAsync(endpoint, requestContent);
-            response.EnsureSuccessStatusCode();
+                                                     using var response = await _client.PutAsync(endpoint, requestContent);
+                                                     response.EnsureSuccessStatusCode();
 
-            var responseJson = await response.Content.ReadAsStringAsync();
+                                                     var responseJson = await response.Content.ReadAsStringAsync();
 
-            return string.IsNullOrWhiteSpace(responseJson) ? null : JsonConvert.DeserializeObject<TResponse>(responseJson)!;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-
-            throw;
-        }
-    }
+                                                     return string.IsNullOrWhiteSpace(responseJson) ? null : JsonConvert.DeserializeObject<TResponse>(responseJson)!;
+                                                 });
 
     protected Task<TResponse?> PostAsync<TRequest, TResponse>(string endpoint, TRequest data)
         where TResponse : class
@@ -83,22 +69,14 @@ public abstract class HttpService
 
     private async Task<TResponse?> DoPostAsync<TResponse>(string endpoint, HttpContent content)
         where TResponse : class?
-    {
-        try
-        {
-            var response = await _client.PostAsync(endpoint, content);
+        => await HttpRequestHelper.DoActionWithRetry(async () =>
+                                                 {
+                                                     var response = await _client.PostAsync(endpoint, content);
 
-            response.EnsureSuccessStatusCode();
+                                                     response.EnsureSuccessStatusCode();
 
-            var responseJson = await response.Content.ReadAsStringAsync();
+                                                     var responseJson = await response.Content.ReadAsStringAsync();
 
-            return string.IsNullOrWhiteSpace(responseJson) ? null : JsonConvert.DeserializeObject<TResponse>(responseJson)!;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-
-            throw;
-        }
-    }
+                                                     return string.IsNullOrWhiteSpace(responseJson) ? null : JsonConvert.DeserializeObject<TResponse>(responseJson)!;
+                                                 });
 }
