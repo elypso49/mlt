@@ -1,58 +1,63 @@
-<table *ngIf="rssData" class="table table-striped">
+<div class="filter-container">
+  <input type="text" [(ngModel)]="filterText" (input)="applyFilter()" placeholder="Filter RSS feeds..."
+         class="filter-input modern-input">
+</div>
+
+<table *ngIf="filteredFeeds" class="table modern-table">
   <tbody>
-  <ng-container *ngFor="let rssFeed of rssData; let i = index">
-    <tr>
-      <td>{{ rssFeed.name }}</td>
-      <td>{{ rssFeed.category }}</td>
-      <input type="text" class="form-control" [(ngModel)]="rssFeed.destinationFolder" placeholder="Destination folder"/>
-      <td>
-        <button class="btn" (click)="checkAll(rssFeed, i, areAllItemsSelected(rssFeed.results))">
-          <i *ngIf="!areAllItemsSelected(rssFeed.results)" class="fa-regular fa-square"></i>
-          <i *ngIf="areAllItemsSelected(rssFeed.results)" class="fa-regular fa-square-check"></i>
-        </button>
-      </td>
-      <td>
-        <button class="btn" (click)="debridAll(rssFeed, i)" [disabled]="debridingIndexes.includes(i)">
-          <i class="fa-solid fa-link-slash fa-xs"></i>
-        </button>
-      </td>
-      <td>
-        <button class="btn" (click)="downloadAll(rssFeed, i)" [disabled]="downloadingIndexes.includes(i)">
-          <i class="fa-solid fa-download fa-xs"></i>
-        </button>
-      </td>
-      <td>
-        <button *ngIf="!expandedIndexes.includes(i)" class="btn" (click)="toggleItems(i)"><i
-          class="fa-solid fa-chevron-right fa-xs"></i></button>
-        <button *ngIf="expandedIndexes.includes(i)" class="btn" (click)="toggleItems(i)"><i
-          class="fa-solid fa-chevron-down fa-xs"></i></button>
-      </td>
-    </tr>
-    <tr *ngIf="expandedIndexes.includes(i)">
-      <td colspan="2">
-        <table>
-          <tbody>
-          <tr *ngFor="let item of rssFeed.results; let j = index">
-            <td>
-              <input class="form-check-input" type="checkbox" id="flexCheckDefault" [(ngModel)]="item.checked"/>
-            </td>
-            <td>
-              {{ item.title }}
-            </td>
-            <td>
-              <button class="btn" (click)="debridOne(item, i, j)" [disabled]="debridingSubIndexes.includes(i * 10 + j)">
-                <i *ngIf="hasFlag(item.state, StateValue.Debrided)" class="fa-solid fa-check"></i>
-                <i *ngIf="!hasFlag(item.state, StateValue.Debrided)" class="fa-solid fa-link-slash fa-xs"></i>
-              </button>
-            </td>
-            <button class="btn" (click)="downloadOne(item, rssFeed, i, j)"
-                    [disabled]="downloadingSubIndexes.includes(i * 10 + j)">
-              <i *ngIf="hasFlag(item.state, StateValue.Downloaded)" class="fa-solid fa-check"></i>
-              <i *ngIf="!hasFlag(item.state, StateValue.Downloaded)" class="fa-solid fa-download fa-xs"></i>
-            </button>
-          </tr>
-          </tbody>
-        </table>
+  <ng-container *ngFor="let rssFeed of filteredFeeds; let i = index">
+    <tr class="card-container">
+      <td colspan="3">
+        <div class="card modern-card">
+          <div class="card-header card-toggle" (click)="toggleFeedExpansion(i)">
+            <h3 class="rss-name">{{ rssFeed.name }}</h3>
+            <span class="chevron">
+                <i *ngIf="!expandedFeedIndexes.includes(i)" class="fa-solid fa-chevron-right"></i>
+                <i *ngIf="expandedFeedIndexes.includes(i)" class="fa-solid fa-chevron-down"></i>
+              </span>
+          </div>
+          <div class="card-content">
+            <div class="input-zone">
+              <div class="rss-name">
+                <input type="text" class="form-control text-box modern-input" [(ngModel)]="rssFeed.name"
+                       placeholder="Name"/>
+              </div>
+              <div class="rss-url">
+                <input type="text" class="form-control text-box modern-input" [(ngModel)]="rssFeed.url"
+                       placeholder="URL"/>
+              </div>
+            </div>
+
+            <div class="button-zone">
+              <button class="btn action-btn modern-btn" (click)="refreshFeed(rssFeed)"><i
+                class="fa-solid fa-arrows-rotate"></i></button>
+              <button class="btn action-btn modern-btn" (click)="saveFeed(rssFeed)"><i
+                class="fa-solid fa-floppy-disk"></i></button>
+            </div>
+          </div>
+
+          <div class="card-body" *ngIf="expandedFeedIndexes.includes(i)">
+            <div class="sub-items">
+              <div *ngFor="let item of rssFeed.results; let j = index" class="sub-item modern-sub-item">
+                <div class="tag-container" [title]="item.title">
+                  <div class="sub-item-date">{{ item.createdDate | date:'EEE. dd MMM yyyy':'':'fr' }}</div>
+                  <span *ngFor="let tag of splitTags(getSeasonAndEpisode(rssFeed, item))" class="tag">{{ tag }}</span>
+                </div>
+
+                <div class="sub-item-actions">
+                  <button *ngIf="checkStateValue(item, FeedProcessingState.Downloaded)" class="btn modern-icon-btn"
+                          (click)="markAsNotProcessed(item)">
+                    <i class="fa-solid fa-check-circle modern-icon"></i>
+                  </button>
+                  <button *ngIf="checkStateValue(item, FeedProcessingState.NoProcessed)" class="btn modern-icon-btn"
+                          (click)="markAsDownloaded(item)">
+                    <i class="fa-solid fa-hourglass-half modern-icon"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </td>
     </tr>
   </ng-container>

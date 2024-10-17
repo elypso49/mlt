@@ -1,12 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {RealdebridService} from '../../services/realdebrid.service';
-import {SynologyService} from '../../services/synology.service';
-import {RssFluxService} from "../../services/rss-flux.service";
-import {RssFeed} from "../../core/models/rssFeed";
-import {RssFeedResult} from "../../core/models/RssFeedResult";
-import {StateValue} from "../../core/enums/StateValue";
-
-import { environment } from 'src/environments/environment';
+import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { RealdebridService } from '../../services/realdebrid.service';
+import { SynologyService } from '../../services/synology.service';
+import { RssFluxService } from "../../services/rss-flux.service";
+import { RssFeed } from "../../core/models/rssFeed";
+import { RssFeedResult } from "../../core/models/RssFeedResult";
+import { StateValue } from "../../core/enums/StateValue";
 
 @Component({
   selector: 'app-page-rss',
@@ -14,132 +13,209 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./page-rss.component.scss']
 })
 export class PageRssComponent implements OnInit {
-  expandedIndexes: number[] = [];
-  debridingIndexes: number[] = [];
-  debridingSubIndexes: number[] = [];
-  downloadingIndexes: number[] = [];
-  downloadingSubIndexes: number[] = [];
-  rssData: RssFeed[] | null = null;
+  expandedFeedIndexes: number[] = [];
+  rssFeeds: RssFeed[] | null = null;
+  filteredFeeds: RssFeed[] | null = null;
+  filterText: string = '';
 
-  constructor(private rssFluxService: RssFluxService, private realDebridService: RealdebridService, private synologyService: SynologyService) {
-  }
+  constructor(
+    private rssFluxService: RssFluxService,
+    private realDebridService: RealdebridService,
+    private synologyService: SynologyService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.rssFluxService.getAllRssFlux().subscribe({
       next: (rssFlux: RssFeed[]) => {
         setTimeout(() => {
-          this.rssData = rssFlux;
-          if (this.rssData) {
-            this.rssData.forEach((flux: RssFeed) => {
-              if (flux && flux.results) {
-                flux.results.forEach((item: RssFeedResult) => {
-                  item.checked = true;
-                });
-              }
-            });
-          }
+          rssFlux.forEach(feed => {
+            feed.results = feed.results.sort((a, b) => new Date(b.createdDate!).getTime() - new Date(a.createdDate!).getTime());
+          });
 
+          this.rssFeeds = rssFlux.sort((a, b) => {
+            const latestDateA = a.results.length > 0 ? new Date(a.results[0].createdDate!).getTime() : 0;
+            const latestDateB = b.results.length > 0 ? new Date(b.results[0].createdDate!).getTime() : 0;
+
+            if (latestDateA === latestDateB) {
+              return a.name.localeCompare(b.name);
+            }
+
+            return latestDateB - latestDateA;
+          });
+
+          this.applyFilter();
         }, 1000);
       }
     });
   }
 
-  hasFlag(state: StateValue, flag: StateValue): boolean {
-    return (state & flag) === flag;
-  }
-
-
-  areAllItemsSelected(items: RssFeedResult[]): boolean {
-    return items.every(item => item.checked);
-  }
-
-
-  toggleItems(index: number): void {
-    if (this.expandedIndexes.includes(index)) {
-      this.expandedIndexes = this.expandedIndexes.filter(i => i !== index);
+  applyFilter(): void {
+    if (this.filterText.trim() === '') {
+      this.filteredFeeds = this.rssFeeds;
     } else {
-      this.expandedIndexes.push(index);
+      const filterLower = this.filterText.toLowerCase();
+      this.filteredFeeds = this.rssFeeds?.filter(feed => feed.name.toLowerCase().includes(filterLower)) || null;
     }
   }
 
-  checkAll(rssFeed: RssFeed, index: number, currentValue: boolean) {
-    rssFeed.results.forEach((item: RssFeedResult) => {
-      item.checked = !currentValue;
-    });
-  }
-
-  downloadAll(rssFeeds: RssFeed, index: number) {
-    this.downloadingIndexes.push(index);
-
-    const filteredItems: RssFeedResult[] = rssFeeds.results.filter((item: RssFeedResult) => item.checked && (item.state & StateValue.Debrided));
-
-    let idx = 0;
-    filteredItems.forEach((item: RssFeedResult) => {
-      this.downloadOne(item, rssFeeds, index, idx++);
-    });
-
-    this.synologyService.downloadItems(filteredItems).subscribe(
-      {
-        next: (values) => {
-          console.log(values);
-        },
-        complete: () => {
-          this.downloadingIndexes = this.downloadingIndexes.filter(i => i !== index);
-        }
-      }
-    )
-  }
-
-  downloadOne(item: RssFeedResult, rssFeed: RssFeed, index: number, subIndex: number) {
-    if (item.state & StateValue.Debrided) {
-      const idx = (index * 10) + subIndex;
-      this.downloadingSubIndexes.push(idx);
-
-      this.synologyService.downloadItem(item).subscribe(
-        {
-          next: (value) => {
-            item.state |= StateValue.Downloaded;
-          },
-          complete: () => {
-            this.downloadingSubIndexes = this.downloadingSubIndexes.filter(i => i !== idx);
-          },
-        }
-      )
+  toggleFeedExpansion(index: number): void {
+    if (this.expandedFeedIndexes.includes(index)) {
+      this.expandedFeedIndexes = this.expandedFeedIndexes.filter(i => i !== index);
+    } else {
+      this.expandedFeedIndexes.push(index);
     }
   }
 
-  debridAll(rssFeed: RssFeed, index: number) {
-    this.debridingIndexes.push(index);
-
-    const filteredItems: RssFeedResult[] = rssFeed.results.filter((item: RssFeedResult) => item.checked);
-
-    this.realDebridService.debridItems(filteredItems).subscribe(
-      {
-        next: (values) => {
-          console.log(values);
-        },
-        complete: () => {
-          this.debridingIndexes = this.debridingIndexes.filter(i => i !== index);
-        }
+  markAsNotProcessed(rssFeedResult: RssFeedResult): void {
+    rssFeedResult.state = StateValue.NoProcessed;
+    this.rssFluxService.updateRssFeedResult(rssFeedResult).subscribe(isSuccess => {
+      if (isSuccess) {
+        this.toastr.info('Queued for download', `${rssFeedResult.title}`);
+      } else {
+        this.toastr.error('Operation failed', 'Failure');
       }
-    )
+    });
   }
 
-  debridOne(item: RssFeedResult, index: number, subIndex: number) {
-    const idx = (index * 10) + subIndex;
-    this.debridingSubIndexes.push(idx);
-
-    this.realDebridService.debridItem(item).subscribe(
-      {
-        next: (value) => {
-          item.state |= StateValue.Debrided;
-        },
-        complete: () => {
-          this.debridingSubIndexes = this.debridingSubIndexes.filter(i => i !== idx);
-        },
+  markAsDownloaded(rssFeedResult: RssFeedResult): void {
+    rssFeedResult.state = StateValue.Downloaded;
+    this.rssFluxService.updateRssFeedResult(rssFeedResult).subscribe(isSuccess => {
+      if (isSuccess) {
+        this.toastr.info('Flag as downloaded', `${rssFeedResult.title}`);
+      } else {
+        this.toastr.error('Operation failed', 'Failure');
+        console.log('Reset failed.');
       }
-    )
+    });
   }
 
-  protected readonly StateValue = StateValue;
+  checkStateValue(result: RssFeedResult, expectedState: StateValue): boolean {
+    return expectedState === Number(this.convertToEnum(result.state));
+  }
+
+  convertToEnum(value: any): StateValue | null {
+    const strVal = value.toString();
+    switch (strVal) {
+      case "NoProcessed":
+        return StateValue.NoProcessed;
+      case "Downloaded":
+        return StateValue.Downloaded;
+    }
+    const numberVal = Number(value);
+    switch (numberVal) {
+      case StateValue.NoProcessed:
+        return StateValue.NoProcessed;
+      case StateValue.Downloaded:
+        return StateValue.Downloaded;
+    }
+    return null;
+  }
+
+  splitTags(fullString: string): string[] {
+    return fullString.split('/');
+  }
+
+  getSeasonAndEpisode(rssFeed: RssFeed, rssFeedResult: RssFeedResult): string {
+    const title = rssFeedResult.title!;
+    const serieName = rssFeedResult.nyaaInfoHash?.trim() ? '' : `${rssFeedResult.tvShowName}/`;
+
+    // Regex for matching SXXEYY pattern
+    const fileNameRegex = /S(\d{2})E(\d{2})/i;
+    // Regex for matching "SEASONXX"
+    const seasonRegex = /SEASON\s*(\d+)/i;
+    // Regex for matching multiple seasons like "Season 1+2" or "S01+02"
+    const multipleSeasonsRegex = /(?:S|SEASON)\s*(\d{1,2})(?:\s*\+\s*(\d{1,2}))+/gi;
+    // Regex for matching just the episode number in formats like "- 03"
+    const episodeOnlyRegex = /-\s*(\d{1,2})/;
+    // Regex for matching the whole season, e.g., "Season X" or "Batch"
+    const wholeSeasonRegex = /SEASON\s*\d+|BATCH/i;
+    // Regex for matching specials like "S02SP01-02"
+    const specialsRegex = /S(\d{2})SP(\d{1,2})-(\d{1,2})/i;
+    // Regex for matching OVA/OAV with an optional number
+    const oavRegex = /(OAV|OVA)\s*(\d{1,2})?/i;
+
+    // Clean the title to simplify matching (mimicking `CleanTitle()` from C#)
+    const cleanTitle = this.cleanTitle(title);
+
+    // Try to match the fileNameRegex for "SXXEYY" format
+    let match = fileNameRegex.exec(cleanTitle);
+    if (match) {
+      return `${serieName}Season ${parseInt(match[1], 10).toString().padStart(2, '0')}/Episode ${parseInt(match[2], 10).toString().padStart(2, '0')}`;
+    }
+
+    // If the previous regex doesn't work, try to match a season-only format
+    match = seasonRegex.exec(cleanTitle);
+    if (match) {
+      return `${serieName}Season ${parseInt(match[1], 10).toString().padStart(2, '0')}`;
+    }
+
+    // Check if it is multiple seasons defined
+    let seasonsList = [];
+    const multipleSeasonsPattern = /(?:S|SEASON)\s*(\d{1,2})/gi;
+    let seasonsMatch;
+    while ((seasonsMatch = multipleSeasonsPattern.exec(cleanTitle)) !== null) {
+      const seasonNumber = parseInt(seasonsMatch[1], 10).toString().padStart(2, '0');
+      seasonsList.push(`Season ${seasonNumber}`);
+    }
+    if (seasonsList.length > 0) {
+      return seasonsList.join(', ');
+    }
+
+    // Check if it is a whole season batch
+    if (wholeSeasonRegex.test(cleanTitle)) {
+      return `${serieName}Season 00`;
+    }
+
+    // Match specials like "S02SP01-02" and return formatted as "Specials/SP 00"
+    match = specialsRegex.exec(cleanTitle);
+    if (match) {
+      return `${serieName}Specials/SP ${parseInt(match[2], 10).toString().padStart(2, '0')}-${parseInt(match[3], 10).toString().padStart(2, '0')}`;
+    }
+
+    // Check if it's an OVA/OAV and return "Specials/OAV 00" or "Specials/OAV XX" if a number is provided
+    match = oavRegex.exec(cleanTitle);
+    if (match) {
+      const oavNumber = match[2] ? parseInt(match[2], 10).toString().padStart(2, '0') : '00';
+      return `${serieName}Specials/OAV ${oavNumber}`;
+    }
+
+    // Match episode-only regex to extract the episode number and assume Season 01
+    match = episodeOnlyRegex.exec(cleanTitle);
+    if (match) {
+      return `${serieName}Season 01/Episode ${parseInt(match[1], 10).toString().padStart(2, '0')}`;
+    }
+
+    // Default to Season 01 if no other conditions are met
+    return `${serieName}Season 01`;
+  }
+
+  private cleanTitle(title: string): string {
+    return title
+      .replace(/[^a-zA-Z0-9 -]/g, '')
+      .trim()
+      .toUpperCase();
+  }
+
+  refreshFeed(rssFeed: RssFeed): void {
+    this.rssFluxService.refreshRssFeed(rssFeed).subscribe(isSuccess => {
+      if (isSuccess) {
+        this.toastr.info('Refreshed', `${rssFeed.name}`);
+      } else {
+        this.toastr.error('Operation failed', 'Failure');
+      }
+    });
+  }
+
+  saveFeed(rssFeed: RssFeed): void {
+    this.rssFluxService.updateRssFeed(rssFeed).subscribe(isSuccess => {
+      if (isSuccess) {
+        this.toastr.info('Updated', `${rssFeed.name}`);
+      } else {
+        this.toastr.error('Operation failed', 'Failure');
+      }
+    });
+  }
+
+  protected readonly FeedProcessingState = StateValue;
 }

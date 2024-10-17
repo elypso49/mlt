@@ -1,0 +1,289 @@
+// Variables for easy maintenance
+$border-radius: 15px;
+$button-zone-bg-color: #444;
+$button-bg-color: #0056b3;
+$button-hover-bg-color: #007bff;
+$card-header-bg-color: #3c3f41;
+$button-padding: 12px;
+$card-padding: 15px;
+$button-radius: 10px;
+$gap-size: 15px;
+$textbox-discrete-bg-color: rgba(255, 255, 255, 0.1);
+$textbox-border-color: rgba(255, 255, 255, 0.2);
+$textbox-focus-bg-color: #ffffff;
+$textbox-focus-border-color: #007bff;
+$filter-input-bg-color: #3c3f41;
+$filter-input-border-color: rgba(255, 255, 255, 0.3);
+$filter-input-hover-border-color: $textbox-focus-border-color;
+
+/* General Styling */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #2a2d2e;
+  color: #e1e1e1;
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.table > :not(caption) > * > * {
+  border-bottom-width: 0;
+}
+
+/* Filter Container Styling */
+.filter-container {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+
+  .filter-input {
+    padding: $button-padding;
+    width: 60%;
+    background-color: $filter-input-bg-color;
+    border: 1px solid $filter-input-border-color;
+    border-radius: $button-radius;
+    outline: none;
+    color: #e1e1e1;
+    transition: border 0.3s ease, background-color 0.3s ease;
+
+    &:focus {
+      border-color: $filter-input-hover-border-color;
+      background-color: lighten($filter-input-bg-color, 10%);
+    }
+  }
+}
+
+/* Card Styling */
+.card {
+  background-color: #3e4042;
+  border: none;
+  border-radius: $border-radius;
+  padding: 0;
+  margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease-in-out;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Card Header Styling */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: $card-header-bg-color;
+  padding: $card-padding;
+  border-radius: $border-radius $border-radius 0 0;
+}
+
+/* Main Title in Card Header */
+.card-toggle h3 {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Chevron Styling for Main Card */
+.chevron {
+  flex-shrink: 0;
+  margin-left: $gap-size;
+  color: #e1e1e1;
+}
+
+/* Card Content Styling */
+.card-content {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.card-body {
+  padding: 0;
+}
+
+/* Input Zone Styling */
+.input-zone {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $gap-size;
+  justify-content: center;
+  padding: $card-padding;
+
+  input[type="text"] {
+    width: 100%;
+    border: 1px solid $textbox-border-color;
+    background-color: $textbox-discrete-bg-color;
+    padding: 10px;
+    border-radius: 5px;
+    color: #e1e1e1;
+    transition: all 0.3s ease;
+
+    &:focus {
+      background-color: $textbox-focus-bg-color;
+      border-color: $textbox-focus-border-color;
+      color: #333;
+      outline: none;
+    }
+  }
+}
+
+/* Button Zone Styling */
+.button-zone {
+  background-color: $button-zone-bg-color;
+  display: flex;
+  flex-direction: column;
+  gap: $gap-size;
+  align-items: stretch;
+  justify-content: space-between;
+  padding: $button-padding;
+  margin: 0;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+/* Action Button Styling */
+.action-btn {
+  background-color: $button-bg-color;
+  color: white;
+  border: none;
+  padding: $button-padding;
+  cursor: pointer;
+  border-radius: $button-radius;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: $button-hover-bg-color;
+    transform: translateY(-2px);
+  }
+
+  i {
+    font-size: 1.25rem;
+  }
+}
+
+/* Sub-items container */
+.sub-items {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 0 0 $border-radius $border-radius;
+}
+
+/* Sub-item container */
+.sub-item {
+  display: flex;
+  align-items: center;  // Centers items vertically
+  justify-content: space-between;  // Distribute available space between the tags and action button
+  width: 100%;
+  gap: $gap-size;
+  box-sizing: border-box;
+  overflow: hidden;
+  margin-bottom: 8px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* Sub-item title */
+.sub-item-title {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  font-weight: 500;
+}
+
+/* Sub-item actions (buttons) */
+.sub-item-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+
+  .btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+
+    i {
+      font-size: 1.5rem;
+      color: #e1e1e1;
+      transition: color 0.3s, transform 0.2s;
+
+      &:hover {
+        color: $button-hover-bg-color;
+        transform: scale(1.2);
+      }
+    }
+  }
+}
+
+/* Tag container */
+.tag-container {
+  display: flex;
+  align-items: center;  // Vertically align the tags
+  justify-content: flex-start;  // Align tags to the left
+  gap: 10px;  // Space between tags
+}
+
+/* Tag styling */
+.tag {
+  background-color: #3e3f41;
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Separator styling */
+.separator {
+  color: #e1e1e1;             // Light grey to match the rest of the style
+  font-weight: 600;           // Slightly bolder to ensure it is visible
+}
+
+
+/* Media Queries for Small Screens */
+@media (max-width: 768px) {
+  .card-header {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-toggle h3 {
+    font-size: 1.2rem;
+  }
+
+  .sub-item {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+}

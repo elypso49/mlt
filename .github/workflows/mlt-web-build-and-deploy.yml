@@ -9,6 +9,10 @@ on:
       - 'mlt.web/**'
       - '.github/workflows/mlt-web-build-and-deploy.yml'
 
+env:
+  TAG_LATEST: feature #latest
+  TAG_FEATURE: feature
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,7 +34,7 @@ jobs:
       id: tag
       run: |
         if [[ '${{ github.ref }}' == 'refs/heads/main' ]]; then
-          echo "TAG=latest" >> $GITHUB_ENV
+          echo "TAG=${{ env.TAG_LATEST }}" >> $GITHUB_ENV
           if [ -z "${{ secrets.PROD_MLT_WEB_WEBHOOK }}" ]; then
             echo "WEBHOOK=''" >> $GITHUB_ENV
             echo "Warning: PROD_MLT_WEB_WEBHOOK secret is not set."
@@ -38,7 +42,7 @@ jobs:
             echo "WEBHOOK=${{ secrets.PROD_MLT_WEB_WEBHOOK }}" >> $GITHUB_ENV
           fi
         else
-          echo "TAG=feature" >> $GITHUB_ENV
+          echo "TAG=${{ env.TAG_FEATURE }}" >> $GITHUB_ENV
           if [ -z "${{ secrets.QUALIF_MLT_WEB_WEBHOOK }}" ]; then
             echo "WEBHOOK=''" >> $GITHUB_ENV
             echo "Warning: QUALIF_MLT_WEB_WEBHOOK secret is not set."
@@ -56,8 +60,8 @@ jobs:
         tags: ${{ secrets.DOCKER_USERNAME }}/mlt.web:${{ env.TAG }}
 
     - name: Trigger Stack Webhook
-      if: ${{ vars.MLT_WEB_WEBHOOK != '' }}
+      if: ${{ env.WEBHOOK != '' }}
       run: |
-        curl -X POST ${{ vars.MLT_WEB_WEBHOOK }} \
+        curl -X POST ${{ env.WEBHOOK }} \
         -H "Content-Type: application/json" \
         -d '{"status": "success", "tag": "${{ env.TAG }}"}'

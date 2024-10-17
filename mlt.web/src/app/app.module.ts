@@ -6,6 +6,10 @@ import {RssModule} from './rss/rss.module';
 import {PageHomeComponent} from './page-home/page-home.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 import {environment} from "../environments/environment";
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+
+registerLocaleData(localeFr);
 
 export function initializeApp(): () => Promise<void> {
   return (): Promise<void> => {

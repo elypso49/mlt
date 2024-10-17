@@ -1,12 +1,12 @@
 import {StateValue} from '../enums/StateValue'
 
-export interface RssFeedResult {
+export class RssFeedResult {
   id?: string; // Optional
-  rssFeedId: string;
+  rssFeedId?: string;
   title?: string; // Optional
   link?: string; // Optional
   description?: string; // Optional
-  publishDate: Date; // Use Date type for DateTime
+  publishDate?: Date; // Use Date type for DateTime
   createdDate?: Date; // Optional, default to current date if not provided
   state: StateValue; // Use enum type
   updatedDate?: Date; // Optional
@@ -32,5 +32,10 @@ export interface RssFeedResult {
   nyaaRemake?: string; // Optional
 
   // Web fields
-  checked: boolean;
+  checked: boolean =false;
+
+  constructor() {
+    this.checked = false;
+    this.state = StateValue.NoProcessed;
+}
 }
