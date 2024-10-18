@@ -1,0 +1,14 @@
+<div class="task-container">
+  <div class="task-item" *ngFor="let task of synoTasks">
+    <div class="task-info">
+      <div class="task-title" [title]="task.title">{{ task.title }}</div>
+      <div class="task-destination" [title]="task.destination">{{ task.destination }}</div>
+      <div class="task-date">{{ task.createdDateTime | date:'EEE dd MMM yyyy HH:mm':'':'fr' }}</div>
+    </div>
+    <div class="task-status">
+      <span [ngClass]="task.status" class="task-status-icon">
+        <i class="fa" [ngClass]="getStatusIconClass(task.status)"></i>
+      </span>
+    </div>
+  </div>
+</div>

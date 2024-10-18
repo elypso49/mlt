@@ -15,4 +15,9 @@ internal class Detail
     public string UnzipPassword { get; set; }  = null!;
     public string Uri { get; set; }  = null!;
     public int WaitingSeconds { get; set; }
+    
+    public long? Create_time { get; set; } = null!;
+    public long? Completed_time { get; set; } = null!;
+    public DateTime? CreatedDateTime => Create_time is null ? null : DateTimeOffset.FromUnixTimeSeconds(Create_time.Value).DateTime;
+    public DateTime? CompletedDateTime => Completed_time is null ? null : DateTimeOffset.FromUnixTimeSeconds(Completed_time.Value).DateTime;
 }

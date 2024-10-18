@@ -1,0 +1,138 @@
+/* Container for all tasks */
+.task-container {
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Individual Task Item Styling */
+.task-item {
+  background-color: #3e4042;
+  border-radius: 15px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Task Info Styling (Title and Destination) */
+.task-info {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .task-title,
+  .task-destination,
+  .task-date
+  {
+    color: #e1e1e1;
+    white-space: wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .task-title {
+    font-weight: 600;
+  }
+
+  .task-destination,
+  .task-date {
+    font-size: 0.9em;
+    font-weight: 400;
+    color: #c4c4c4; // Slightly lighter color for destination text
+  }
+}
+
+/* Task Status Styling */
+.task-status {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  .task-status-icon {
+    width: 40px; // Set a fixed width to ensure uniform size
+    height: 40px; // Set a fixed height equal to width for a perfect circle
+    border-radius: 50%; // Makes the container a perfect circle
+    display: flex; // Use flex to center align the icon inside
+    align-items: center; // Center vertically
+    justify-content: center; // Center horizontally
+    box-sizing: border-box; // Include padding and border in total width/height
+    color: #ffffff;
+    font-size: 1.2rem; // Adjust font size for better visibility
+    margin-left: 10px;
+
+    &.waiting {
+      background-color: #ffc107; // Yellow for waiting
+    }
+
+    &.downloading {
+      background-color: #17a2b8; // Light blue for downloading
+    }
+
+    &.paused {
+      background-color: #6c757d; // Grey for paused
+    }
+
+    &.finishing {
+      background-color: #28a745; // Green for finishing
+    }
+
+    &.finished {
+      background-color: #28a745; // Green for finished
+    }
+
+    &.hash_checking {
+      background-color: #007bff; // Blue for hash checking
+    }
+
+    &.seeding {
+      background-color: #20c997; // Light green for seeding
+    }
+
+    &.filehosting_waiting {
+      background-color: #ffc107; // Yellow for file hosting waiting
+    }
+
+    &.extracting {
+      background-color: #fd7e14; // Orange for extracting
+    }
+
+    &.error {
+      background-color: #dc3545; // Red for error
+    }
+  }
+}
+
+/* Action Button Styling */
+.action-btn {
+  width: 35px;
+  height: 35px;
+  background-color: #f0f0f0;
+  color: #007bff;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  i {
+    font-size: 1rem;
+  }
+}

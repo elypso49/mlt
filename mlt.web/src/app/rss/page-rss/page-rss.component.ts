@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
-import { RealdebridService } from '../../services/realdebrid.service';
-import { SynologyService } from '../../services/synology.service';
-import { RssFluxService } from "../../services/rss-flux.service";
-import { RssFeed } from "../../core/models/rssFeed";
-import { RssFeedResult } from "../../core/models/RssFeedResult";
-import { StateValue } from "../../core/enums/StateValue";
+import {Component, OnInit} from '@angular/core';
+import {ToastrService} from 'ngx-toastr';
+import {RealdebridService} from '../../services/realdebrid.service';
+import {SynologyService} from '../../services/synology.service';
+import {RssFluxService} from "../../services/rss-flux.service";
+import {RssFeed} from "../../core/models/RssFeed";
+import {RssFeedResult} from "../../core/models/RssFeedResult";
+import {StateValue} from "../../core/enums/StateValue";
+import {tr} from "@faker-js/faker";
 
 @Component({
   selector: 'app-page-rss',
@@ -14,40 +15,32 @@ import { StateValue } from "../../core/enums/StateValue";
 })
 export class PageRssComponent implements OnInit {
   expandedFeedIndexes: number[] = [];
-  rssFeeds: RssFeed[] | null = null;
-  filteredFeeds: RssFeed[] | null = null;
+  rssFeeds: RssFeed[] = [];
   filterText: string = '';
+  filteredFeeds: RssFeed[] = [];
+  showNewElementModal: boolean = false;
+  newRssFeed: RssFeed = {
+    name: '',
+    url: '',
+    results: [],
+    lastUpdate: undefined,
+    category: 'Anime',
+    destinationFolder: 'Animes',
+    fileNameRegex: '',
+    forceFirstSeasonFolder: true
+  };
+
 
   constructor(
     private rssFluxService: RssFluxService,
     private realDebridService: RealdebridService,
     private synologyService: SynologyService,
     private toastr: ToastrService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
-    this.rssFluxService.getAllRssFlux().subscribe({
-      next: (rssFlux: RssFeed[]) => {
-        setTimeout(() => {
-          rssFlux.forEach(feed => {
-            feed.results = feed.results.sort((a, b) => new Date(b.createdDate!).getTime() - new Date(a.createdDate!).getTime());
-          });
-
-          this.rssFeeds = rssFlux.sort((a, b) => {
-            const latestDateA = a.results.length > 0 ? new Date(a.results[0].createdDate!).getTime() : 0;
-            const latestDateB = b.results.length > 0 ? new Date(b.results[0].createdDate!).getTime() : 0;
-
-            if (latestDateA === latestDateB) {
-              return a.name.localeCompare(b.name);
-            }
-
-            return latestDateB - latestDateA;
-          });
-
-          this.applyFilter();
-        }, 1000);
-      }
-    });
+    this.InitializeList();
   }
 
   applyFilter(): void {
@@ -217,5 +210,74 @@ export class PageRssComponent implements OnInit {
     });
   }
 
+  openNewElementModal() {
+    this.showNewElementModal = true;
+  }
+
+  // Method to close the modal
+  closeNewElementModal() {
+    this.showNewElementModal = false;
+    this.resetNewFeed();
+  }
+
+  // Method to add a new RSS feed
+  addNewRssFeed() {
+    // Logic to add the new RSS feed
+    if (this.newRssFeed.name && this.newRssFeed.url) {
+      const newFeed = this.newRssFeed.name;
+
+      this.rssFluxService.createRssFeed(this.newRssFeed).subscribe(isSuccess => {
+        if (isSuccess) {
+          this.toastr.info('Created', `${newFeed}`);
+        } else {
+          this.toastr.error('Operation failed', 'Failure');
+        }
+      });
+
+      this.filteredFeeds.push({...this.newRssFeed});
+      this.closeNewElementModal();
+      this.resetNewFeed();
+    }
+  }
+
+
   protected readonly FeedProcessingState = StateValue;
+
+  private InitializeList() {
+    this.rssFluxService.getAllRssFlux().subscribe({
+      next: (rssFlux: RssFeed[]) => {
+        setTimeout(() => {
+          rssFlux.forEach(feed => {
+            feed.results = feed.results.sort((a, b) => new Date(b.createdDate!).getTime() - new Date(a.createdDate!).getTime());
+          });
+
+          this.rssFeeds = rssFlux.sort((a, b) => {
+            const latestDateA = a.results.length > 0 ? new Date(a.results[0].createdDate!).getTime() : 0;
+            const latestDateB = b.results.length > 0 ? new Date(b.results[0].createdDate!).getTime() : 0;
+
+            if (latestDateA === latestDateB) {
+              return a.name.localeCompare(b.name);
+            }
+
+            return latestDateB - latestDateA;
+          });
+
+          this.applyFilter();
+        }, 1000);
+      }
+    });
+  }
+
+  private resetNewFeed() {
+    this.newRssFeed = {
+      name: '',
+      url: '',
+      results: [],
+      lastUpdate: undefined,
+      category: 'Anime',
+      destinationFolder: 'Animes',
+      fileNameRegex: '',
+      forceFirstSeasonFolder: true
+    };
+  }
 }

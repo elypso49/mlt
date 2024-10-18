@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {forkJoin, map, mergeMap, Observable} from 'rxjs';
-import {RssFeed} from "../core/models/rssFeed";
+import {RssFeed} from "../core/models/RssFeed";
 import {RssFeedResult} from "../core/models/RssFeedResult";
 import {environment} from "../../environments/environment";
 import {StateValue} from "../core/enums/StateValue";
@@ -66,6 +66,23 @@ export class RssFluxService {
     return this.http.put<{
       isSuccess: boolean
     }>(`${environment.services.MltApiEndpoint}/${this.putRssFeedEndpoint}/${rssFeed.id}`, serializedFeeds, {
+      headers: {
+        'Content-Type': 'application/json-patch+json',
+        'Accept': '*/*'
+      }
+    }).pipe(
+      map(response => {
+        return response.isSuccess;
+      })
+    );
+  }
+
+  createRssFeed(rssFeed: RssFeed): Observable<boolean> {
+    const serializedFeeds = JSON.stringify(rssFeed);
+
+    return this.http.post<{
+      isSuccess: boolean
+    }>(`${environment.services.MltApiEndpoint}/${this.putRssFeedEndpoint}`, serializedFeeds, {
       headers: {
         'Content-Type': 'application/json-patch+json',
         'Accept': '*/*'

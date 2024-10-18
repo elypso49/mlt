@@ -9,6 +9,8 @@ public class SynoTask
     public string Title { get; set; } = null!;
     public string Id { get; set; } = null!;
     public DownloadStatus Status { get; set; }
-    public long size { get; set; }
-    public long size_downloaded { get; set; }
+    public long Size { get; set; }
+    public long Size_downloaded { get; set; }
+    public DateTime? CreatedDateTime { get; set; }
+    public DateTime? CompletedDateTime { get; set; }
 }

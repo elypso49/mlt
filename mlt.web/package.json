@@ -21,6 +21,7 @@
     "@angular/router": "^16.2.0",
     "@babel/plugin-transform-async-generator-functions": "^7.25.8",
     "@babel/plugin-transform-unicode-property-regex": "^7.25.7",
+    "@faker-js/faker": "^9.0.3",
     "@fortawesome/fontawesome-free": "^6.6.0",
     "@ng-bootstrap/ng-bootstrap": "^15.1.2",
     "@npmcli/fs": "^4.0.0",

@@ -1,6 +1,7 @@
 <div class="filter-container">
   <input type="text" [(ngModel)]="filterText" (input)="applyFilter()" placeholder="Filter RSS feeds..."
          class="filter-input modern-input">
+  <button class="btn add-new-btn modern-btn" (click)="openNewElementModal()"><i class="fa-solid fa-circle-plus"></i></button>
 </div>
 
 <table *ngIf="filteredFeeds" class="table modern-table">
@@ -40,7 +41,7 @@
             <div class="sub-items">
               <div *ngFor="let item of rssFeed.results; let j = index" class="sub-item modern-sub-item">
                 <div class="tag-container" [title]="item.title">
-                  <div class="sub-item-date">{{ item.createdDate | date:'EEE. dd MMM yyyy':'':'fr' }}</div>
+                  <div class="sub-item-date">{{ item.createdDate | date:'EEE dd MMM yyyy HH:mm':'':'fr' }}</div>
                   <span *ngFor="let tag of splitTags(getSeasonAndEpisode(rssFeed, item))" class="tag">{{ tag }}</span>
                 </div>
 
@@ -63,3 +64,34 @@
   </ng-container>
   </tbody>
 </table>
+
+<div *ngIf="showNewElementModal" class="modal-overlay">
+  <div class="modal-content">
+    <h2>Add new feed</h2>
+    <div class="form-group">
+      <input id="rssName" type="text" class="form-control modern-input" [(ngModel)]="newRssFeed.name"
+             placeholder="Name">
+    </div>
+    <div class="form-group">
+      <input id="rssUrl" type="text" class="form-control modern-input" [(ngModel)]="newRssFeed.url"
+             placeholder="Rss url">
+    </div>
+    <div class="form-group">
+      <input id="rssDestinationFolder" type="text" class="form-control modern-input"
+             [(ngModel)]="newRssFeed.destinationFolder" placeholder="Destination">
+    </div>
+    <div class="form-group">
+      <input id="rssCategory" type="text" class="form-control modern-input" [(ngModel)]="newRssFeed.category"
+             placeholder="Category">
+    </div>
+    <div class="form-group">
+      <input id="rssFileNameRegex" type="text" class="form-control modern-input" [(ngModel)]="newRssFeed.fileNameRegex"
+             placeholder="File regex (empty by default)">
+    </div>
+
+    <div class="button-group d-flex">
+      <button class="btn modern-submit-btn flex-fill me-2" (click)="addNewRssFeed()"><i class="fa-solid fa-floppy-disk"></i></button>
+      <button class="btn modern-cancel-btn flex-fill" (click)="closeNewElementModal()">Cancel</button>
+    </div>
+  </div>
+</div>

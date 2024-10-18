@@ -1,6 +1,6 @@
-<ul ngbNav #nav="ngbNav" [activeId]="route.fragment | async" class="nav-tabs">
-  <li *ngFor="let link of links" [ngbNavItem]="link.fragment">
-    <a ngbNavLink [routerLink]="[link.fragment]">{{ link.title }}</a>
+<ul ngbNav #nav="ngbNav" [activeId]="route.fragment | async" class="nav-tabs custom-nav">
+  <li *ngFor="let link of links" [ngbNavItem]="link.fragment" class="nav-item">
+    <a ngbNavLink [routerLink]="[link.fragment]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">{{ link.title }}</a>
   </li>
 </ul>
 

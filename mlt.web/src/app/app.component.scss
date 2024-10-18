@@ -1,8 +1,49 @@
+.custom-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 0 !important; // Bottom border for visual separation
+
+  .nav-item {
+    margin: 0 10px;
+    transition: all 0.3s ease-in-out;
+    border: 0 !important; // Bottom border for visual separation
+
+    .nav-link {
+      text-decoration: none;
+      color: #e1e1e1; // Light grey text color
+      padding: 15px 20px; // Padding to make tabs feel spacious
+      //background-color: transparent;
+      transition: all 0.3s ease-in-out;
+      border: 0 !important; // Bottom border for visual separation
+
+      &:hover {
+        color: #ffffff; // Slightly brighter on hover
+        border: 0 !important; // Bottom border for visual separation
+        //background-color: rgba(255, 255, 255, 0.1); // Subtle background to indicate hover
+      }
+
+      &.active {
+        color: #ffffff;
+        border: 0 !important; // Bottom border for visual separation
+        //background-color: #007bff; // Active tab background color (blue)
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+/* Optional Body Styling */
+html {
+  background-color: #2a2d2e; // Dark grey background to match the other pages
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
-}
-
-html{
-  background-color: black;
+  color: #e1e1e1; // Consistent color theme
+  padding: 20px;
 }

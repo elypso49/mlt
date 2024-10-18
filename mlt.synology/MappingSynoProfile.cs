@@ -13,10 +13,12 @@ public class MappingSynoProfile : Profile
             .ForMember(dest => dest.Destination, opt => opt.MapFrom(src => src.Additional.Detail.Destination))
             .ForMember(dest => dest.Uri, opt => opt.MapFrom(src => src.Additional.Detail.Uri))
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+           .ForMember(dest => dest.CompletedDateTime, opt => opt.MapFrom(src => src.Additional.Detail.CompletedDateTime))
+           .ForMember(dest => dest.CreatedDateTime, opt => opt.MapFrom(src => src.Additional.Detail.CreatedDateTime))
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => MapStatus(src.Status)))
-            .ForMember(dest => dest.size, opt => opt.MapFrom(src => src.Size))
-            .ForMember(dest => dest.size_downloaded, opt => opt.MapFrom(src => src.Additional.Transfer.SizeDownloaded));
+            .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.Size))
+            .ForMember(dest => dest.Size_downloaded, opt => opt.MapFrom(src => src.Additional.Transfer.SizeDownloaded));
 
         CreateMap<FileItem, SynoFolder>().ForMember(dest => dest.Folders, opt => opt.Ignore());
     }

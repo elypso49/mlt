@@ -8,6 +8,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 import {environment} from "../environments/environment";
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
+import {SynologyModule} from "./synology/synology.module";
 
 registerLocaleData(localeFr);
 
@@ -32,6 +33,7 @@ export function initializeApp(): () => Promise<void> {
     BrowserModule,
     AppRoutingModule,
     RssModule,
+    SynologyModule,
     NgbModule
   ],
   providers: [

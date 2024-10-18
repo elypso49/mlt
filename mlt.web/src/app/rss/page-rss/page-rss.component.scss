@@ -1,8 +1,8 @@
 // Variables for easy maintenance
 $border-radius: 15px;
 $button-zone-bg-color: #444;
-$button-bg-color: #0056b3;
-$button-hover-bg-color: #007bff;
+$button-bg-color: none;
+$button-hover-bg-color: none;
 $card-header-bg-color: #3c3f41;
 $button-padding: 12px;
 $card-padding: 15px;
@@ -174,6 +174,7 @@ body {
   &:hover {
     background-color: $button-hover-bg-color;
     transform: translateY(-2px);
+    //color: gray;
   }
 
   i {
@@ -286,4 +287,95 @@ body {
     flex-wrap: nowrap;
     justify-content: space-between;
   }
+}
+
+
+/* Modal Overlay Styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal Content Styling */
+.modal-content {
+  background-color: #3e4042;
+  padding: 20px;
+  border-radius: 15px;
+  width: 400px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  color: #e1e1e1;
+}
+
+.form-group {
+  margin-bottom: 15px;
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    color: #e1e1e1;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #595959;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #e1e1e1;
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-color: #007bff;
+      background-color: #fff;
+      color: #333;
+      outline: none;
+    }
+  }
+}
+
+/* Button Styling */
+.button-group {
+  margin-top: 20px; // Add some margin above the button group
+  display: flex;
+  gap: 10px; // Add space between the buttons (alternative to margin-right)
+}
+
+.modern-submit-btn {
+  color: white; // A more vivid green for submit
+  background-color: #4391C1;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color : #4fa0d3; // Darker green on hover
+  }
+}
+
+.modern-cancel-btn {
+  background-color: #DD5344; // A more vivid red for cancel
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #f15f4f; // Darker red on hover
+  }
+}
+
+.add-new-btn {
+  font-size: 1.4rem;
 }

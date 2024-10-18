@@ -10,8 +10,8 @@ export class AppComponent {
   title = 'mlt.web';
 
   links = [
-    {title: 'Home', fragment: ''},
-    {title: 'RSS', fragment: 'rss'}
+    {title: 'RSS', fragment: ''},
+    {title: 'Syno', fragment: 'syno'}
   ];
 
   constructor(public route: ActivatedRoute) {
