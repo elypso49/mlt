@@ -1,0 +1,27 @@
+<div class="folder-selector">
+  <!-- Selected Tags Display -->
+  <div class="selected-tags">
+    <div *ngFor="let folder of selectedFolders; let i = index" class="tag">
+      {{ folder.name }}
+      <span class="remove-tag" *ngIf="i === selectedFolders.length - 1" (click)="removeFolder(i)">x</span>
+    </div>
+  </div>
+
+  <!-- Autocomplete Input Field for Folder Selection -->
+  <div class="folder-autocomplete" *ngIf="currentFolderOptions.length > 0">
+    <input type="text" placeholder="Start typing..." [formControl]="currentFolderControl" (input)="filterFolders()" [(ngModel)]="finalInput" (ngModelChange)="emitSelectedPath()" />
+    <ul class="autocomplete-list" *ngIf="filteredFolders.length > 0">
+      <li *ngFor="let folder of filteredFolders" (click)="onFolderSelected(folder)">
+        {{ folder.name }}
+      </li>
+    </ul>
+  </div>
+
+  <!-- Final Textbox for Last Input (if no subfolders are available) -->
+  <div *ngIf="selectedFolders.length > 0 && currentFolderOptions.length === 0">
+    <input type="text" placeholder="Enter final folder or file name" [(ngModel)]="finalInput" (ngModelChange)="emitSelectedPath()">
+  </div>
+
+  <!-- Submit Button -->
+<!--  <button (click)="submit()">Submit</button>-->
+</div>

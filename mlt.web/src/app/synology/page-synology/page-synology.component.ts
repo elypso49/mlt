@@ -1,8 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {SynoTask} from "../../core/models/SynoTask";
 import {SynologyService} from "../../services/synology.service";
-import {DownloadStatus} from "../../core/enums/DownloadStatus";
-import {faker} from '@faker-js/faker';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {environment} from "../../../environments/environment";
+import {ToastrService} from "ngx-toastr";
+import {SynoFolder} from "../../core/models/SynoFolder";
+import {fa} from "@faker-js/faker";
 
 @Component({
   selector: 'app-page-synology',
@@ -11,10 +14,134 @@ import {faker} from '@faker-js/faker';
 })
 export class PageSynologyComponent implements OnInit {
   synoTasks: SynoTask[] = [];
+  synoFolders: SynoFolder[] = [];
+  isModalOpen = false;
+  destinationFolder: string = '';
 
-  constructor(private synologyService: SynologyService) {}
+  selectedFiles: File[] = [];
+  uploading: boolean=false;
+  uploadStatus: string = '';
 
-  ngOnInit(): void {
+  constructor(private synologyService: SynologyService,
+              private httpClient: HttpClient,
+              private toastr: ToastrService) {
+  }
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  // Close the modal
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  // Handle file selected
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const selectedFilesFromInput = Array.from(input.files);
+
+      // Append selected files while filtering out duplicates
+      this.selectedFiles = [...this.selectedFiles, ...selectedFilesFromInput.filter(file => !this.selectedFiles.some(f => f.name === file.name))];
+    }
+  }
+
+  handlePathSelected(selectedPath: string) {
+    console.log(selectedPath);
+    this.destinationFolder = selectedPath;
+  }
+
+
+  // Handle drag over event
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    const dropArea = document.querySelector('.upload-wrapper');
+    dropArea?.classList.add('drag-over');
+  }
+
+  // Handle drag leave event
+  onDragLeave(event: DragEvent) {
+    const dropArea = document.querySelector('.upload-wrapper');
+    dropArea?.classList.remove('drag-over');
+  }
+
+  // Handle drop event
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    const dropArea = document.querySelector('.upload-wrapper');
+    dropArea?.classList.remove('drag-over');
+
+    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+      const droppedFiles = Array.from(event.dataTransfer.files);
+
+      // Append dropped files while filtering out duplicates
+      this.selectedFiles = [...this.selectedFiles, ...droppedFiles.filter(file => !this.selectedFiles.some(f => f.name === file.name))];
+    }
+  }
+
+  uploadFileAsBase64() {
+    if (this.selectedFiles.length === 0) {
+      this.uploadStatus = 'No files selected!';
+      return;
+    }
+
+    this.uploading = true;
+
+    // Iterate over all selected files and upload them
+    this.selectedFiles.forEach(file => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const fileBase64 = reader.result as string;
+        const base64Data = fileBase64.split(',')[1]; // Strip the Base64 prefix
+
+        const requestPayload = {
+          fileName: file.name,  // Use the actual file name
+          fileData: base64Data,
+          destinationFolder: this.destinationFolder
+        };
+
+        console.log(requestPayload);
+
+        // Send the Base64 data as JSON
+        this.httpClient.post(`${environment.services.MltApiEndpoint}/api/Workflow/uploadBase64`, requestPayload, {
+          headers: { 'Content-Type': 'application/json' }
+        }).subscribe({
+          next: (response) => {
+            this.uploadStatus = `File ${file.name} uploaded successfully!`;
+            this.toastr.info('Success', `File ${file.name} uploaded successfully`);
+            console.log('Response:', response);
+
+            // Close modal after uploading all files
+            if (file === this.selectedFiles[this.selectedFiles.length - 1]) {
+              this.uploading = false;
+              this.closeModal();
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);  // Add a slight delay before reload
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+            this.toastr.error('Error', `An error occurred ${error}`);
+            console.error('Error:', error);
+
+            this.uploading = false;
+
+            // Close modal if an error occurs
+            if (file === this.selectedFiles[this.selectedFiles.length - 1]) {
+              this.closeModal();
+            }
+          }
+        });
+      };
+
+      reader.readAsDataURL(file);  // Read file as Base64
+    });
+  }
+
+  // Fetch tasks
+  fetchTasks() {
     this.synologyService.getSynoTasks().subscribe({
       next: (tasks: SynoTask[]) => {
         this.synoTasks = tasks.sort((a, b) => {
@@ -25,102 +152,20 @@ export class PageSynologyComponent implements OnInit {
         console.error('Failed to fetch tasks', err);
       }
     });
-
-
-    // this.synoTasks.push(
-    //   {
-    //     title: 'Waiting',
-    //     destination: faker.address.streetAddress(),
-    //     status: DownloadStatus.Waiting,
-    //     id: 'test-waiting',
-    //     uri: 'https://example.com',
-    //     size: 1000000,
-    //     sizeDownloaded: 0
-    //   },
-    //   {
-    //     title: 'Downloading',
-    //     destination: faker.address.streetAddress(),
-    //     status: DownloadStatus.Downloading,
-    //     id: 'test-downloading',
-    //     uri: 'https://example.com',
-    //     size: 1000000,
-    //     sizeDownloaded: 500000
-    //   },
-    //   {
-    //     title: 'Paused',
-    //     destination: faker.address.streetAddress(),
-    //     status: DownloadStatus.Paused,
-    //     id: 'test-paused',
-    //     uri: 'https://example.com',
-    //     size: 1000000,
-    //     sizeDownloaded: 500000
-    //   },
-    //   {
-    //     title: 'Finishing',
-    //     destination: faker.address.streetAddress(),
-    //     status: DownloadStatus.Finishing,
-    //     id: 'test-finishing',
-    //     uri: 'https://example.com',
-    //     size: 1000000,
-    //     sizeDownloaded: 1000000
-    //   },
-    //   {
-    //     title: 'Finished',
-    //     destination: faker.address.streetAddress(),
-    //     status: DownloadStatus.Finished,
-    //     id: 'test-finished',
-    //     uri: 'https://example.com',
-    //     size: 1000000,
-    //     sizeDownloaded: 1000000
-    //   },
-    //   {
-    //     title: 'Hash Checking',
-    //     destination: faker.address.streetAddress(),
-    //     status: DownloadStatus.HashChecking,
-    //     id: 'test-hash-checking',
-    //     uri: 'https://example.com',
-    //     size: 1000000,
-    //     sizeDownloaded: 1000000
-    //   },
-    //   {
-    //     title: 'Seeding',
-    //     destination: faker.address.streetAddress(),
-    //     status: DownloadStatus.Seeding,
-    //     id: 'test-seeding',
-    //     uri: 'https://example.com',
-    //     size: 1000000,
-    //     sizeDownloaded: 1000000
-    //   },
-    //   {
-    //     title: 'Filehosting Waiting',
-    //     destination: faker.address.streetAddress(),
-    //     status: DownloadStatus.FilehostingWaiting,
-    //     id: 'test-filehosting-waiting',
-    //     uri: 'https://example.com',
-    //     size: 1000000,
-    //     sizeDownloaded: 0
-    //   },
-    //   {
-    //     title: 'Extracting',
-    //     destination: faker.address.streetAddress(),
-    //     status: DownloadStatus.Extracting,
-    //     id: 'test-extracting',
-    //     uri: 'https://example.com',
-    //     size: 1000000,
-    //     sizeDownloaded: 0
-    //   },
-    //   {
-    //     title: 'Error',
-    //     destination: faker.address.streetAddress(),
-    //     status: DownloadStatus.Error,
-    //     id: 'test-error',
-    //     uri: 'https://example.com',
-    //     size: 1000000,
-    //     sizeDownloaded: 0
-    //   }
-    // );
   }
 
+  ngOnInit(): void {
+    // Initial fetch
+    this.fetchTasks();
+    this.fetchFolders();
+
+    // Set interval to fetch tasks every 20 seconds
+    setInterval(() => {
+      if (!this.isModalOpen) {  // Only fetch if the modal is not open
+        this.fetchTasks();
+      }
+    }, 20000); // 20 seconds interval
+  }
 
   getStatusIconClass(status: string): string {
     switch (status) {
@@ -149,31 +194,17 @@ export class PageSynologyComponent implements OnInit {
     }
   }
 
-  getStatusColor(status: string): string {
-    switch (status) {
-      case 'waiting':
-        return '#ffcc00'; // Yellow
-      case 'downloading':
-        return '#007bff'; // Blue
-      case 'paused':
-        return '#ffc107'; // Orange
-      case 'finishing':
-        return '#28a745'; // Green
-      case 'finished':
-        return '#28a745'; // Green
-      case 'hash_checking':
-        return '#17a2b8'; // Teal
-      case 'seeding':
-        return '#6f42c1'; // Purple
-      case 'filehosting_waiting':
-        return '#ffcc00'; // Yellow
-      case 'extracting':
-        return '#f0ad4e'; // Light Orange
-      case 'error':
-        return '#dc3545'; // Red
-      default:
-        return '#6c757d'; // Gray for unknown status
-    }
+  private fetchFolders() {
+    this.synologyService.getSynoFolders().subscribe({
+      next: (folders: SynoFolder[]) => {
+        console.log(folders)
+        this.synoFolders = folders;
+      },
+      error: (err) => {
+        console.error('Failed to fetch tasks', err);
+      }
+    });
   }
 
+  protected readonly SynoFolder = SynoFolder;
 }

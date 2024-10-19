@@ -1,3 +1,42 @@
+<div class="container">
+  <button class="open-modal-btn modern-btn" (click)="openModal()" [disabled]="!synoFolders || synoFolders.length === 0">
+    <i class="fa-solid fa-circle-plus"></i></button>
+  <div class="modal" *ngIf="isModalOpen">
+    <div class="modal-content" [ngClass]="{ 'disabled': uploading }">
+      <span class="close" (click)="!uploading && closeModal()">&times;</span>
+
+      <h2>Select or Drop a File</h2>
+
+      <div class="upload-wrapper"
+           (dragover)="!uploading && onDragOver($event)"
+           (dragleave)="!uploading && onDragLeave($event)"
+           (drop)="!uploading && onDrop($event)">
+        <input type="file" class="file-input" (change)="!uploading && onFileSelected($event)" multiple
+               [disabled]="uploading"/>
+        <!-- Allow multiple file selection -->
+        <span *ngIf="selectedFiles.length === 0">Choose a file or drag it here</span>
+
+        <!-- Show the first two file names -->
+        <span *ngIf="selectedFiles.length === 1">{{ selectedFiles[0].name }}</span>
+        <span *ngIf="selectedFiles.length === 2">{{ selectedFiles[0].name }}, {{ selectedFiles[1].name }}</span>
+
+        <!-- Show the first two files and "and X more files" when more than two files are selected -->
+        <span  *ngIf="selectedFiles.length > 2">
+          {{ selectedFiles[0].name }}, {{ selectedFiles[1].name }} and {{ selectedFiles.length - 2 }} more files
+        </span>
+      </div>
+
+      <app-folder-selector [baseFolders]="synoFolders" (pathSelected)="!uploading && handlePathSelected($event)">
+      </app-folder-selector>
+
+      <button class="upload-btn" (click)="!uploading && uploadFileAsBase64()"
+              [disabled]="!selectedFiles || uploading || uploading">Upload
+      </button>
+    </div>
+  </div>
+
+</div>
+
 <div class="task-container">
   <div class="task-item" *ngFor="let task of synoTasks">
     <div class="task-info">

@@ -7,13 +7,12 @@ using mlt.synology.clients.dtos;
 
 namespace mlt.synology.clients;
 
-internal class FileStationHttpClient(IOptions<SynologyOptions> options, IMapper mapper)
-    : SynologyHttpClient(options.Value, "webapi/entry.cgi"), IFileStationHttpClient
+internal class FileStationHttpClient(IOptions<SynologyOptions> options, IMapper mapper) : SynologyHttpClient(options.Value, "webapi/entry.cgi"), IFileStationHttpClient
 {
     private const string ListApi = "SYNO.FileStation.List";
     private const string CreateFolderApi = "SYNO.FileStation.CreateFolder";
 
-    public async Task<List<SynoFolder>> GetFoldersWithSubs(string? folderPath = null)
+    public async Task<List<SynoFolder>> GetFoldersWithSubs(string? folderPath = null, int level = 0)
     {
         string method, parameters = string.Empty;
 
@@ -33,8 +32,9 @@ internal class FileStationHttpClient(IOptions<SynologyOptions> options, IMapper 
 
         var synoFolders = mapper.Map<IEnumerable<SynoFolder>>(fileItems).ToList();
 
-        foreach (var folder in synoFolders)
-            folder.Folders.AddRange(await GetFoldersWithSubs(folder.Path.ToUrlSafeString()));
+        if (level < 1)
+            foreach (var folder in synoFolders)
+                folder.Folders.AddRange(await GetFoldersWithSubs(folder.Path.ToUrlSafeString(), level + 1));
 
         return synoFolders;
     }

@@ -9,6 +9,7 @@ import {environment} from "../environments/environment";
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import {SynologyModule} from "./synology/synology.module";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 registerLocaleData(localeFr);
 
@@ -34,7 +35,8 @@ export function initializeApp(): () => Promise<void> {
     AppRoutingModule,
     RssModule,
     SynologyModule,
-    NgbModule
+    NgbModule,
+    BrowserAnimationsModule,
   ],
   providers: [
     {

@@ -220,9 +220,7 @@ export class PageRssComponent implements OnInit {
     this.resetNewFeed();
   }
 
-  // Method to add a new RSS feed
   addNewRssFeed() {
-    // Logic to add the new RSS feed
     if (this.newRssFeed.name && this.newRssFeed.url) {
       const newFeed = this.newRssFeed.name;
 
