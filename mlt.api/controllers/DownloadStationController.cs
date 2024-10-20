@@ -10,6 +10,10 @@ public class DownloadStationController(IDownloadStationService service) : BaseCo
     [HttpGet]
     public Task<IActionResult> Get()
         => HandleRequest(async () => Ok(await service.GetTasks()));
+    
+    [HttpGet("Clean")]
+    public Task<IActionResult> Clean()
+        => HandleRequest(async () => Ok(await service.CleanTasks()));
 
     [HttpGet("CreateTask")]
     public Task<IActionResult> CreateTask(string uri, string? destination)

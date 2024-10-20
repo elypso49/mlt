@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Options;
 using mlt.common.dtos.synology;
+using mlt.common.dtos.synology.enums;
 using mlt.common.extensions;
 using mlt.common.options;
 using mlt.synology.clients.dtos;
@@ -21,6 +22,29 @@ internal class DownloadStationHttpClient(
         var synoTasks = mapper.Map<IEnumerable<SynoTask>>(response.Data.Tasks);
 
         return synoTasks;
+    }
+
+    public async Task<IEnumerable<SynoTask>> CleanTasks()
+    {
+        var tasks = await GetTasks();
+        
+        var todeletelist = string.Join(",", tasks.Where(x => x.Status == DownloadStatus.finished).Select(x => x.Id));
+
+        if (string.IsNullOrWhiteSpace(todeletelist))
+            return null;
+
+        try
+        {
+            await GetSynoAsync<object>(TaskApi, "1", "delete", $"&id={todeletelist}");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+
+            throw;
+        }
+
+        return null;
     }
 
     public async Task<SynoCreateTaskResponse> CreateTask(string uri, string destination)

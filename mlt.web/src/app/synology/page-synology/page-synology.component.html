@@ -1,6 +1,8 @@
 <div class="container">
   <button class="open-modal-btn modern-btn" (click)="openModal()" [disabled]="!synoFolders || synoFolders.length === 0">
     <i class="fa-solid fa-circle-plus"></i></button>
+  <button class="open-modal-btn modern-btn" (click)="cleanTasks()" [disabled]="isCleaning">
+    <i class="fa-solid fa-broom"></i></button>
   <div class="modal" *ngIf="isModalOpen">
     <div class="modal-content" [ngClass]="{ 'disabled': uploading }">
       <span class="close" (click)="!uploading && closeModal()">&times;</span>

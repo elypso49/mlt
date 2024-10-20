@@ -9,6 +9,9 @@ internal class DownloadStationService(IDownloadStationHttpClient dsClient) : Bas
 {
     public Task<ResponseDto<IEnumerable<SynoTask>>> GetTasks()
         => HandleDataRetrievement(async () => await dsClient.GetTasks());
+    
+    public Task<ResponseDto<IEnumerable<SynoTask>>> CleanTasks()
+        => HandleDataRetrievement(async () => await dsClient.CleanTasks());
 
     public async Task<ResponseDto<List<SynoCreateTaskResponse>>?> CreateTask(IEnumerable<string> uri, string destination = "Movies")
     {

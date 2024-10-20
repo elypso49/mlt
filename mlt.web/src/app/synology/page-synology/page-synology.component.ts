@@ -16,10 +16,11 @@ export class PageSynologyComponent implements OnInit {
   synoTasks: SynoTask[] = [];
   synoFolders: SynoFolder[] = [];
   isModalOpen = false;
+  isCleaning = false;
   destinationFolder: string = '';
 
   selectedFiles: File[] = [];
-  uploading: boolean=false;
+  uploading: boolean = false;
   uploadStatus: string = '';
 
   constructor(private synologyService: SynologyService,
@@ -106,7 +107,7 @@ export class PageSynologyComponent implements OnInit {
 
         // Send the Base64 data as JSON
         this.httpClient.post(`${environment.services.MltApiEndpoint}/api/Workflow/uploadBase64`, requestPayload, {
-          headers: { 'Content-Type': 'application/json' }
+          headers: {'Content-Type': 'application/json'}
         }).subscribe({
           next: (response) => {
             this.uploadStatus = `File ${file.name} uploaded successfully!`;
@@ -147,6 +148,8 @@ export class PageSynologyComponent implements OnInit {
         this.synoTasks = tasks.sort((a, b) => {
           return new Date(b.createdDateTime!).getTime() - new Date(a.createdDateTime!).getTime();
         });
+
+        console.log(this.synoTasks)
       },
       error: (err) => {
         console.error('Failed to fetch tasks', err);
@@ -207,4 +210,31 @@ export class PageSynologyComponent implements OnInit {
   }
 
   protected readonly SynoFolder = SynoFolder;
+
+  cleanTasks() {
+    this.isCleaning = true;
+
+    this.synologyService.cleanSynoTasks().subscribe(
+      (isSuccess) => {
+        if (isSuccess) {
+          this.toastr.info('Success', 'The tasks have been cleaned');
+
+          // Optionally reload after a slight delay if needed
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          this.toastr.error('Failed', 'The tasks could not be cleaned');
+        }
+
+        this.isCleaning = false;
+      },
+      (error) => {
+        // Handle any errors that occur during the API call
+        console.error('Error cleaning Synology tasks:', error);
+        this.toastr.error('Failed', 'An error occurred while cleaning the tasks');
+        this.isCleaning = false;
+      }
+    );
+  }
 }
